@@ -1,0 +1,37 @@
+<svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" {{ $attributes }}>
+  <defs>
+    <linearGradient id="logoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#6A1B9A;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#E91E63;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#FFD700;stop-opacity:1" />
+    </linearGradient>
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+      <feMerge> 
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  
+  <!-- Background Circle -->
+  <circle cx="50" cy="50" r="45" fill="url(#logoGradient)" opacity="0.1" stroke="url(#logoGradient)" stroke-width="2"/>
+  
+  <!-- Stylized Hair Scissors -->
+  <g transform="translate(50, 35)" filter="url(#glow)">
+    <path d="M-8 5L-12 1 -8 -3M8 5L12 1 8 -3M0 1h8" stroke="url(#logoGradient)" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+    <circle cx="-12" cy="1" r="3" fill="url(#logoGradient)"/>
+    <circle cx="12" cy="1" r="3" fill="url(#logoGradient)"/>
+  </g>
+  
+  <!-- Initials -->
+  <text x="50" y="65" font-family="Playfair Display, serif" font-size="20" font-weight="700" fill="url(#logoGradient)" text-anchor="middle">
+    LHS
+  </text>
+  
+  <!-- Small decorative elements -->
+  <circle cx="25" cy="25" r="1.5" fill="#FFD700" opacity="0.7"/>
+  <circle cx="75" cy="25" r="1.5" fill="#FFD700" opacity="0.7"/>
+  <circle cx="25" cy="75" r="1.5" fill="#FFD700" opacity="0.7"/>
+  <circle cx="75" cy="75" r="1.5" fill="#FFD700" opacity="0.7"/>
+</svg>
