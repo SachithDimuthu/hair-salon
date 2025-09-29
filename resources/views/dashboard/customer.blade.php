@@ -85,7 +85,7 @@
                 </div>
                 <div class="ml-4">
                     <p class="text-sm font-medium text-primary-600">Total Spent</p>
-                    <p class="text-2xl font-bold text-primary-900">${{ number_format($stats['total_spent'], 2) }}</p>
+                    <p class="text-2xl font-bold text-primary-900">LKR {{ number_format($stats['total_spent'], 2) }}</p>
                 </div>
             </div>
         </x-ui.card>
@@ -191,13 +191,6 @@
                         </svg>
                         Browse Services
                     </x-ui.button>
-                    
-                    <x-ui.button href="{{ route('staff') }}" variant="outline" size="sm" class="w-full">
-                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
-                        </svg>
-                        Meet Our Team
-                    </x-ui.button>
                 </div>
             </x-ui.card>
 
@@ -246,22 +239,22 @@
                 </div>
                 
                 <p class="text-sm text-gray-600 mb-3">
-                    You've spent ${{ number_format($stats['total_spent'], 2) }} with us! 
-                    @if($stats['total_spent'] >= 1000)
+                    You've spent LKR {{ number_format($stats['total_spent'], 2) }} with us! 
+                    @if($stats['total_spent'] >= 100000)
                         You're a VIP member with exclusive benefits.
                     @else
-                        Spend ${{ number_format(1000 - $stats['total_spent'], 2) }} more to become a VIP member.
+                        Spend LKR {{ number_format(100000 - $stats['total_spent'], 2) }} more to become a VIP member.
                     @endif
                 </p>
                 
                 <div class="w-full bg-gray-200 rounded-full h-2 mb-2">
                     <div class="bg-gradient-to-r from-yellow-400 to-orange-400 h-2 rounded-full" 
-                         style="width: {{ min(($stats['total_spent'] / 1000) * 100, 100) }}%;">
+                         style="width: {{ min(($stats['total_spent'] / 100000) * 100, 100) }}%;">
                     </div>
                 </div>
                 
                 <p class="text-xs text-gray-500">
-                    {{ number_format(min(($stats['total_spent'] / 1000) * 100, 100), 1) }}% to VIP status
+                    {{ number_format(min(($stats['total_spent'] / 100000) * 100, 100), 1) }}% to VIP status
                 </p>
             </x-ui.card>
         </div>

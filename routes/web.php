@@ -1,64 +1,140 @@
 <?php
 
-use App\Http\Controllers\AppointmentController;
-use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\HomeController;
-use App\Http\Controllers\Admin\CustomerController as AdminCustomerController;
-use App\Http\Controllers\Admin\ServiceController as AdminServiceController;
-use App\Http\Controllers\Admin\StaffController as AdminStaffController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
 
-// Public routes
-Route::get('/', [HomeController::class, 'index'])->name('home');
-Route::get('/services', [HomeController::class, 'services'])->name('services');
-Route::get('/staff', [HomeController::class, 'staff'])->name('staff');
-Route::get('/contact', [HomeController::class, 'contact'])->name('contact');
-Route::get('/about', [HomeController::class, 'about'])->name('about');
+/*
+|--------------------------------------------------------------------------
+| Web Routes
+|--------------------------------------------------------------------------
+|
+| Here is where you can register web routes for your application. These
+| routes are loaded by the RouteServiceProvider within a group which
+| contains the "web" middleware group. Now create something great!
+|
+| Web routes should only contain:
+| - Routes that return Blade views
+| - Routes used for Livewire components
+| - Browser-based application routes
+|
+*/
 
-// Authenticated routes
+// Public web routes
+Route::get('/', function () {
+    return view('welcome');
+})->name('home');
+
+// Public pages
+Route::get('/services', function () {
+    $services = \App\Models\Service::where('visibility', true)->orderBy('category')->get();
+    return view('pages.services', compact('services'));
+})->name('services');
+
+Route::get('/about', function () {
+    return view('pages.about');
+})->name('about');
+
+Route::get('/contact', function () {
+    return view('pages.contact');
+})->name('contact');
+
+// Public Livewire component routes
+Route::get('/book-service', function () {
+    return view('components.layout', ['component' => 'book-service']);
+})->name('book-service');
+
+// Authenticated web routes (requires login)
 Route::middleware([
     'auth:sanctum',
     config('jetstream.auth_session'),
     'verified',
 ])->group(function () {
-    
-    // Main dashboard - redirects to role-specific dashboard
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-    
-    // Role-specific dashboards
-    Route::get('/admin/dashboard', [DashboardController::class, 'admin'])
-        ->middleware('admin')
-        ->name('admin.dashboard');
-    
-    Route::get('/staff/dashboard', [DashboardController::class, 'staff'])
-        ->middleware('staff')
-        ->name('staff.dashboard');
-    
-    Route::get('/customer/dashboard', [DashboardController::class, 'customer'])
-        ->middleware('role:customer')
-        ->name('customer.dashboard');
 
-    // Admin routes
-    Route::middleware('admin')->prefix('admin')->name('admin.')->group(function () {
-        Route::resource('staff', AdminStaffController::class);
-        Route::resource('customers', AdminCustomerController::class);
-        Route::resource('services', AdminServiceController::class);
-        Route::patch('services/{service}/toggle-status', [AdminServiceController::class, 'toggleStatus'])
-            ->name('services.toggleStatus');
+    // Main dashboard - role-based redirection
+    Route::get('/dashboard', function () {
+        $user = Auth::user();
+        
+        if ($user->isAdmin()) {
+            return redirect()->route('admin.dashboard');
+        } elseif ($user->isCustomer()) {
+            return redirect()->route('customer.dashboard');
+        }
+        
+        // Default fallback
+        return view('components.layout', ['component' => 'dashboard']);
+    })->name('dashboard');
+
+    // Customer dashboard routes
+    Route::prefix('customer')->name('customer.')->middleware('role:customer')->group(function () {
+        Route::get('/dashboard', function () {
+            $user = Auth::user();
+            
+            // Calculate customer statistics (using dummy data for now)
+            $stats = [
+                'total_appointments' => 0,
+                'upcoming_appointments' => 0,
+                'total_orders' => 0,
+                'total_spent' => 0.00,
+            ];
+            
+            // Create empty collections for appointments and orders
+            $upcomingAppointments = collect();
+            $recentOrders = collect();
+            
+            return view('dashboard.customer', compact('stats', 'upcomingAppointments', 'recentOrders'));
+        })->name('dashboard');
     });
 
-    // Customer routes
-    Route::middleware('role:customer')->group(function () {
-        Route::resource('appointments', AppointmentController::class)->except(['index', 'show']);
-        Route::get('/appointments', [AppointmentController::class, 'index'])->name('appointments.index');
-        Route::get('/appointments/{appointment}', [AppointmentController::class, 'show'])->name('appointments.show');
+    // Appointment routes for customers
+    Route::prefix('appointments')->name('appointments.')->middleware('role:customer')->group(function () {
+        Route::get('/create', function () {
+            return view('components.layout', ['component' => 'book-service']);
+        })->name('create');
+        
+        Route::get('/my-appointments', function () {
+            return view('appointments.index');
+        })->name('index');
+        
+        Route::get('/{appointment}', function ($appointment) {
+            return view('appointments.show', compact('appointment'));
+        })->name('show');
+        
+        Route::get('/{appointment}/edit', function ($appointment) {
+            return view('appointments.edit', compact('appointment'));
+        })->name('edit');
     });
 
-    // Staff routes (accessible by both staff and admin)
-    Route::middleware('staff')->prefix('staff')->name('staff.')->group(function () {
-        // Staff-specific appointment management
-        Route::get('/appointments', [AppointmentController::class, 'staffIndex'])->name('appointments.index');
-        Route::get('/appointments/{appointment}', [AppointmentController::class, 'staffShow'])->name('appointments.show');
-        Route::put('/appointments/{appointment}', [AppointmentController::class, 'staffUpdate'])->name('appointments.update');
+    // Customer order routes
+    Route::prefix('orders')->name('orders.')->middleware('role:customer')->group(function () {
+        Route::get('/', function () {
+            return view('orders.index');
+        })->name('index');
     });
-});
+
+    // Customer loyalty routes
+    Route::prefix('loyalty')->name('loyalty.')->middleware('role:customer')->group(function () {
+        Route::get('/', function () {
+            return view('loyalty.index');
+        })->name('index');
+    });
+
+    // Admin web interface routes (Livewire components)
+    Route::prefix('admin')->name('admin.')->middleware('admin')->group(function () {
+        
+        Route::get('/dashboard', function () {
+            return view('components.layout', ['component' => 'dashboard']);
+        })->name('dashboard');
+
+        Route::get('/customers', function () {
+            return view('components.layout', ['component' => 'manage-customers']);
+        })->name('customers');
+
+        Route::get('/services', function () {
+            return view('components.layout', ['component' => 'manage-services']);
+        })->name('services');
+
+        Route::get('/deals', function () {
+            return view('components.layout', ['component' => 'manage-deals']);
+        })->name('deals');
+
+    });});

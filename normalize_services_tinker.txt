@@ -1,0 +1,43 @@
+# Normalize Service Documents - Tinker Script
+# Run this in php artisan tinker
+
+use App\Models\Service;
+
+# Get all services and normalize their data
+$services = Service::all();
+$updated = 0;
+
+foreach ($services as $service) {
+    $needsUpdate = false;
+    $original = $service->toArray();
+    
+    # Convert JSON strings to arrays for array fields
+    foreach (['durations', 'tags', 'staff_ids', 'addon_ids'] as $field) {
+        if (isset($original[$field]) && is_string($original[$field])) {
+            $decoded = json_decode($original[$field], true);
+            if (json_last_error() === JSON_ERROR_NONE && is_array($decoded)) {
+                $service->{$field} = $decoded;
+                $needsUpdate = true;
+                echo "Converting {$field} for service: {$service->name}\n";
+            }
+        }
+    }
+    
+    # Convert booking_constraints JSON string to object/array
+    if (isset($original['booking_constraints']) && is_string($original['booking_constraints'])) {
+        $decoded = json_decode($original['booking_constraints'], true);
+        if (json_last_error() === JSON_ERROR_NONE) {
+            $service->booking_constraints = $decoded;
+            $needsUpdate = true;
+            echo "Converting booking_constraints for service: {$service->name}\n";
+        }
+    }
+    
+    if ($needsUpdate) {
+        $service->save();
+        $updated++;
+    }
+}
+
+echo "Normalization complete! Updated {$updated} services.\n";
+echo "Run Service::first() to verify the data structure.\n";

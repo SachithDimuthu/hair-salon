@@ -12,14 +12,6 @@ export default defineConfig({
         // Production optimizations
         minify: 'esbuild',
         cssCodeSplit: true,
-        rollupOptions: {
-            output: {
-                manualChunks: {
-                    vendor: ['lodash', 'axios'],
-                    alpine: ['alpinejs'],
-                },
-            },
-        },
         // Generate sourcemaps for debugging in staging
         sourcemap: process.env.NODE_ENV !== 'production',
         // Asset optimization

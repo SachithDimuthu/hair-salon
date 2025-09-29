@@ -98,6 +98,18 @@ return [
             'sslmode' => 'prefer',
         ],
 
+        'mongodb' => [
+            'driver' => 'mongodb',
+            'host' => env('DB_MONGO_HOST', '127.0.0.1'),
+            'port' => env('DB_MONGO_PORT', 27017),
+            'database' => env('DB_MONGO_DATABASE', 'luxe_hair_studio'),
+            'username' => env('DB_MONGO_USERNAME'),
+            'password' => env('DB_MONGO_PASSWORD'),
+            'options' => [
+                'database' => env('DB_MONGO_DATABASE', 'luxe_hair_studio'),
+            ],
+        ],
+
         'sqlsrv' => [
             'driver' => 'sqlsrv',
             'url' => env('DB_URL'),

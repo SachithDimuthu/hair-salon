@@ -43,7 +43,11 @@
 
             <!-- Page Content -->
             <main class="min-h-screen bg-neutral-50">
-                {{ $slot }}
+                @if(isset($slot))
+                    {{ $slot }}
+                @else
+                    @yield('content')
+                @endif
             </main>
         </div>
 

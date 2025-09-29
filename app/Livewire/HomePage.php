@@ -1,0 +1,43 @@
+<?php
+
+namespace App\Livewire;
+
+use Livewire\Component;
+use App\Models\Deal;
+use App\Models\Service;
+use Illuminate\Support\Collection;
+
+class HomePage extends Component
+{
+    public $deals;
+    public $popularServices;
+
+    public function mount()
+    {
+        $this->loadData();
+    }
+
+    public function loadData()
+    {
+        // Get active deals with their services
+        $this->deals = Deal::with('service')
+            ->where('IsActive', true)
+            ->where('StartDate', '<=', now())
+            ->where('EndDate', '>=', now())
+            ->orderBy('created_at', 'desc')
+            ->limit(6)
+            ->get();
+
+        // Get 9 most popular services (active and visible)
+        $this->popularServices = Service::where('active', true)
+            ->where('visibility', true)
+            ->orderBy('rating', 'desc')
+            ->limit(9)
+            ->get();
+    }
+
+    public function render()
+    {
+        return view('livewire.home-page');
+    }
+}

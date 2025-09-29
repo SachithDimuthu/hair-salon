@@ -328,12 +328,12 @@
             </x-ui.button>
             
             <x-ui.button 
-                href="{{ route('staff') }}" 
+                href="{{ route('services') }}" 
                 variant="outline" 
                 size="lg"
                 class="border-white text-white hover:bg-white hover:text-primary-600"
             >
-                Meet Our Team
+                View Our Services
             </x-ui.button>
         </div>
     </div>
