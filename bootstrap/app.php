@@ -15,6 +15,11 @@ return Application::configure(basePath: dirname(__DIR__))
         // Global middleware
         $middleware->append(\App\Http\Middleware\SecurityHeadersMiddleware::class);
         
+        // API middleware group - Add Sanctum for stateful API requests
+        $middleware->api(prepend: [
+            \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
+        ]);
+        
         // Middleware aliases
         $middleware->alias([
             'role' => \App\Http\Middleware\RoleMiddleware::class,

@@ -47,6 +47,10 @@ Route::middleware(['throttle:auth,5,1'])->group(function () {
     Route::post('/register', [AuthController::class, 'register'])
         ->name('api.auth.register');
     
+    // Demo token generation for testing (remove in production)
+    Route::get('/demo-token', [AuthController::class, 'demoToken'])
+        ->name('api.auth.demo-token');
+    
 });
 
 // Protected API routes (requires authentication)

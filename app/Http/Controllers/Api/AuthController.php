@@ -94,4 +94,39 @@ class AuthController extends Controller
             'message' => 'Successfully logged out from all devices'
         ]);
     }
+
+    /**
+     * Demo token generation (for testing purposes only)
+     * This creates a token for the first admin user for easy API testing
+     */
+    public function demoToken()
+    {
+        // Find the first admin user for demo purposes
+        $user = User::where('role', 'admin')->first();
+        
+        if (!$user) {
+            return response()->json([
+                'message' => 'No admin user found. Please create an admin user first.'
+            ], 404);
+        }
+
+        // Create a demo token
+        $token = $user->createToken('demo-api-access')->plainTextToken;
+
+        return response()->json([
+            'message' => 'Demo token generated successfully',
+            'user' => [
+                'id' => $user->id,
+                'name' => $user->name,
+                'email' => $user->email,
+                'role' => $user->role,
+            ],
+            'token' => $token,
+            'instructions' => [
+                'usage' => 'Add this token to your API requests as a Bearer token',
+                'header' => 'Authorization: Bearer ' . $token,
+                'example' => 'curl -H "Authorization: Bearer ' . $token . '" http://127.0.0.1:8000/api/user'
+            ]
+        ]);
+    }
 }
