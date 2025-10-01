@@ -1,13 +1,7 @@
 import './bootstrap';
 
-// Import AlpineJS
-import Alpine from 'alpinejs';
+// For Livewire v3.6+, Alpine is now bundled with Livewire
+// We don't need to import or initialize Alpine separately
+// Livewire will handle all Alpine initialization automatically
 
-// Make Alpine available globally for Livewire
-window.Alpine = Alpine;
-
-// DON'T start Alpine manually - let Livewire handle it
-// Alpine.start(); // <-- This line causes conflicts with Livewire
-
-// Note: Livewire will automatically start Alpine when it initializes
-// Cache bust comment: v2.0 - Fixed Alpine conflicts
+// Cache bust comment: v5.0 - Removed Alpine import for Livewire v3.6+ compatibility

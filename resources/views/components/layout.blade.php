@@ -168,6 +168,8 @@
     <main class="min-h-screen bg-gray-50">
         @if($component === 'book-service')
             @livewire('book-service')
+        @elseif($component === 'test-button')
+            @livewire('test-button')
         @elseif($component === 'dashboard')
             @livewire('dashboard')
         @elseif($component === 'manage-bookings')

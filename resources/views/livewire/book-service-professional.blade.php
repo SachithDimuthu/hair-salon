@@ -22,7 +22,7 @@
                     </div>
                     <h2 class="text-2xl font-bold text-gray-900 mb-4">Booking Confirmed!</h2>
                     <p class="text-gray-600 mb-6">Your appointment has been successfully booked. We'll send you a confirmation email shortly.</p>
-                    <button wire:click="resetForm" 
+                    <button wire:click="startNewBooking" 
                             class="w-full bg-gradient-to-r from-rose-500 to-pink-600 hover:from-rose-600 hover:to-pink-700 text-white px-6 py-3 rounded-xl font-semibold transition-all duration-300">
                         Book Another Service
                     </button>
@@ -258,6 +258,15 @@
                             <div class="text-center mb-8">
                                 <h2 class="text-2xl font-bold text-gray-900 mb-2">Your Details & Confirmation</h2>
                                 <p class="text-gray-600">Please provide your contact information and review your booking</p>
+                                
+                                <!-- Test Data Button for Development -->
+                                <div class="mt-4">
+                                    <button wire:click="fillTestData" 
+                                            type="button"
+                                            class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-200">
+                                        📝 Fill Test Data (For Testing)
+                                    </button>
+                                </div>
                             </div>
 
                             <div class="max-w-4xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -392,16 +401,27 @@
                                     </svg>
                                 </button>
                             @else
-                                <button wire:click="confirmBooking" 
-                                        wire:loading.attr="disabled"
-                                        wire:loading.class="opacity-50 cursor-not-allowed"
-                                        class="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white px-8 py-3 rounded-xl font-semibold transition-all duration-300 shadow-lg hover:shadow-xl flex items-center space-x-2">
-                                    <svg wire:loading.remove class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
-                                    </svg>
-                                    <div wire:loading class="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                                    <span>Confirm Booking</span>
-                                </button>
+                                <div class="flex items-center space-x-4">
+                                    <!-- Test Button (for debugging) -->
+                                    <button wire:click="testBookingButton" 
+                                            type="button"
+                                            class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg font-medium transition-colors duration-200">
+                                        🧪 Test Button
+                                    </button>
+                                    
+                                    <!-- Main Confirm Button -->
+                                    <button wire:click="confirmBooking" 
+                                            wire:loading.attr="disabled"
+                                            wire:loading.class="opacity-50 cursor-not-allowed"
+                                            type="button"
+                                            class="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white px-10 py-4 rounded-xl font-bold text-lg transition-all duration-300 shadow-lg hover:shadow-xl flex items-center justify-center space-x-3 min-w-[220px]">
+                                        <svg wire:loading.remove class="w-6 h-6 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                                        </svg>
+                                        <div wire:loading class="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin flex-shrink-0"></div>
+                                        <span class="whitespace-nowrap font-bold">✅ Confirm Booking</span>
+                                    </button>
+                                </div>
                             @endif
                         </div>
                     </div>

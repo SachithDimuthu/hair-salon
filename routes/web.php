@@ -29,6 +29,11 @@ Route::get('/test-time-slots', function () {
     return view('test-time-slots');
 })->name('test-time-slots');
 
+// Test route for basic Livewire functionality  
+Route::get('/test-button', function () {
+    return view('components.layout', ['component' => 'test-button']);
+})->name('test-button');
+
 // Public pages
 Route::get('/services', function () {
     $services = \App\Models\Service::where('visibility', true)->orderBy('category')->get();

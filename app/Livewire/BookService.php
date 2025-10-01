@@ -5,6 +5,7 @@ namespace App\Livewire;
 use Livewire\Component;
 use App\Models\Service;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 
 class BookService extends Component
 {
@@ -29,12 +30,15 @@ class BookService extends Component
 
     public function mount()
     {
+        Log::info('BookService component mounting');
         $this->loadServices();
         $this->generateTimeSlots();
+        Log::info('BookService component mounted successfully');
     }
 
     public function render()
     {
+        Log::info('BookService render method called');
         return view('livewire.book-service-professional');
     }
 
@@ -54,18 +58,22 @@ class BookService extends Component
                     }
                 }
                 
+                // Ensure we always have required fields
                 return [
-                    '_id' => (string) $service->_id,
-                    'name' => $service->name,
-                    'description' => $service->description,
-                    'base_price' => $service->base_price,
+                    '_id' => (string) ($service->_id ?? $service->id ?? uniqid()),
+                    'name' => $service->name ?? 'Unknown Service',
+                    'description' => $service->description ?? '',
+                    'base_price' => $service->base_price ?? 0,
                     'durations' => $service->durations ?? [['minutes' => 60]],
                     'category' => $service->category ?? '',
                     'visibility' => $service->visibility ?? true,
                     'image' => $imagePath
                 ];
             })->toArray();
+            
+            Log::info('Services loaded successfully', ['count' => count($this->services)]);
         } catch (\Exception $e) {
+            Log::error('Error loading services', ['error' => $e->getMessage()]);
             $this->services = [];
             $this->message = 'Unable to load services. Please refresh the page.';
             $this->messageType = 'error';
@@ -136,7 +144,7 @@ class BookService extends Component
         }
         
         if ($this->currentStep == 4) {
-            // Validate customer details
+            // Validate customer details before allowing to proceed
             $rules = [
                 'firstName' => 'required|min:2',
                 'lastName' => 'required|min:2',
@@ -144,7 +152,13 @@ class BookService extends Component
                 'phone' => 'required|min:10'
             ];
             
-            $this->validate($rules);
+            try {
+                $this->validate($rules);
+            } catch (\Illuminate\Validation\ValidationException $e) {
+                $this->message = 'Please fill in all required fields correctly.';
+                $this->messageType = 'error';
+                return;
+            }
         }
         
         if ($this->currentStep < $this->maxSteps) {
@@ -160,23 +174,114 @@ class BookService extends Component
         }
     }
 
+    public function fillTestData()
+    {
+        // Fill form with test data for quick testing
+        $this->firstName = 'John';
+        $this->lastName = 'Doe';
+        $this->email = 'john.doe@example.com';
+        $this->phone = '0771234567';
+        $this->specialRequests = 'Test booking request';
+        
+        // Select first service if available
+        if (!empty($this->services) && isset($this->services[0]['_id'])) {
+            $this->selectedServiceId = $this->services[0]['_id'];
+            $this->selectService($this->services[0]['_id']);
+        }
+        
+        // Set today's date and first available time
+        $this->bookingDate = now()->format('Y-m-d');
+        if (!empty($this->availableTimeSlots)) {
+            $this->bookingTime = $this->availableTimeSlots[0];
+        }
+        
+        $this->message = 'Test data filled successfully!';
+        $this->messageType = 'success';
+    }
+
     public function confirmBooking()
     {
+        // Debug: Log that method was called
+        Log::info('confirmBooking method called');
+        
         try {
-            // In a real application, you would save this to a Booking model
-            // For now, we'll just show a success message
+            // Validate all required fields before confirming
+            $rules = [
+                'firstName' => 'required|min:2',
+                'lastName' => 'required|min:2', 
+                'email' => 'required|email',
+                'phone' => 'required|min:10',
+                'selectedServiceId' => 'required',
+                'bookingDate' => 'required|date',
+                'bookingTime' => 'required'
+            ];
             
+            Log::info('About to validate booking data', [
+                'firstName' => $this->firstName,
+                'lastName' => $this->lastName,
+                'email' => $this->email,
+                'phone' => $this->phone,
+                'selectedServiceId' => $this->selectedServiceId,
+                'bookingDate' => $this->bookingDate,
+                'bookingTime' => $this->bookingTime
+            ]);
+            
+            $this->validate($rules);
+            
+            Log::info('Validation passed, setting confirmation');
+            
+            // Set confirmation state
             $this->isConfirmed = true;
             $this->message = 'Booking confirmed successfully! You will receive a confirmation email shortly.';
             $this->messageType = 'success';
             
-            // Reset the form for next booking
-            $this->resetForm();
+            Log::info('Booking confirmation completed');
             
+            // Emit event for potential toast notification
+            $this->dispatch('notify', [
+                'type' => 'success',
+                'message' => 'Booking confirmed successfully!',
+                'title' => 'Success'
+            ]);
+            
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            Log::error('Validation failed', ['errors' => $e->errors()]);
+            $this->message = 'Please fill in all required fields correctly.';
+            $this->messageType = 'error';
+            
+            // Emit error notification
+            $this->dispatch('notify', [
+                'type' => 'error',
+                'message' => 'Please fill in all required fields correctly.',
+                'title' => 'Validation Error'
+            ]);
         } catch (\Exception $e) {
+            Log::error('Booking confirmation error', ['error' => $e->getMessage()]);
             $this->message = 'Error confirming booking. Please try again.';
             $this->messageType = 'error';
+            
+            // Emit error notification
+            $this->dispatch('notify', [
+                'type' => 'error',
+                'message' => 'Error confirming booking. Please try again.',
+                'title' => 'Booking Error'
+            ]);
         }
+    }
+
+    public function testBookingButton()
+    {
+        Log::info('Test booking button clicked - functionality is working!');
+        $this->message = 'Button is working correctly! Please fill in all fields to proceed with booking.';
+        $this->messageType = 'success';
+    }
+
+    public function startNewBooking()
+    {
+        // Method to reset form for a new booking
+        $this->resetForm();
+        $this->isConfirmed = false;
+        $this->message = '';
     }
 
     public function resetForm()
