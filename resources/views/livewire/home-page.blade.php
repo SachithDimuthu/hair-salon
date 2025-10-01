@@ -1,4 +1,107 @@
 <div>
+    <!-- Featured Services -->
+    @if($popularServices && $popularServices->count() > 0)
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8 mb-16">
+        @foreach($popularServices->take(3) as $index => $service)
+            <a href="{{ route('service.show', $service) }}" 
+               class="group bg-white/90 backdrop-blur-sm p-8 rounded-2xl shadow-md hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 border border-gray-100 h-full flex flex-col">
+                @if($service->image)
+                    <div class="w-16 h-16 rounded-xl overflow-hidden mb-6 mx-auto shadow-md">
+                        <img src="{{ asset($service->image) }}" alt="{{ $service->name }}" 
+                             class="w-full h-full object-cover">
+                    </div>
+                @else
+                    @php
+                        $gradients = [
+                            'bg-gradient-to-br from-rose-500 to-rose-600',
+                            'bg-gradient-to-br from-purple-500 to-purple-600', 
+                            'bg-gradient-to-br from-amber-500 to-amber-600'
+                        ];
+                        $gradient = $gradients[$index % 3];
+                    @endphp
+                    <div class="w-16 h-16 {{ $gradient }} rounded-xl flex items-center justify-center mb-6 mx-auto shadow-md">
+                        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h1m4 0h1m-6 4h8M7 7h10a2 2 0 012 2v8a2 2 0 01-2 2H7a2 2 0 01-2-2V9a2 2 0 012-2z"/>
+                        </svg>
+                    </div>
+                @endif
+                
+                <h3 class="text-2xl font-bold text-gray-800 mb-4 font-serif text-center group-hover:text-rose-600 transition-colors">{{ $service->name }}</h3>
+                <p class="text-base text-gray-600 mb-6 leading-relaxed text-center flex-grow">{{ Str::limit($service->description, 120) }}</p>
+                <div class="text-center mt-auto">
+                    <p class="text-rose-600 font-semibold text-lg mb-2">Starting from Rs.{{ number_format((float)$service->base_price, 0) }}</p>
+                    <span class="inline-flex items-center text-rose-600 hover:text-rose-700 font-semibold group transition-colors duration-200">
+                        Learn More
+                        <svg class="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+                        </svg>
+                    </span>
+                </div>
+            </a>
+        @endforeach
+    </div>
+    @else
+    <!-- Static fallback services if no dynamic services -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8 mb-16">
+        <a href="{{ route('services') }}" class="group bg-white/90 backdrop-blur-sm p-8 rounded-2xl shadow-md hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 border border-gray-100 h-full flex flex-col">
+            <div class="w-16 h-16 bg-gradient-to-br from-rose-500 to-rose-600 rounded-xl flex items-center justify-center mb-6 mx-auto shadow-md">
+                <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zM7 21h10a2 2 0 002-2v-4a2 2 0 00-2-2H7"/>
+                </svg>
+            </div>
+            <h3 class="text-2xl font-bold text-gray-800 mb-4 font-serif text-center group-hover:text-rose-600 transition-colors">Hair Styling</h3>
+            <p class="text-base text-gray-600 mb-6 leading-relaxed text-center flex-grow">Professional cuts, styling, and treatments to transform your look with our expert stylists</p>
+            <div class="text-center mt-auto">
+                <p class="text-rose-600 font-semibold text-lg mb-2">Starting from Rs.1,200</p>
+                <span class="inline-flex items-center text-rose-600 hover:text-rose-700 font-semibold group transition-colors duration-200">
+                    Learn More
+                    <svg class="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+                    </svg>
+                </span>
+            </div>
+        </a>
+
+        <a href="{{ route('services') }}" class="group bg-white/90 backdrop-blur-sm p-8 rounded-2xl shadow-md hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 border border-gray-100 h-full flex flex-col">
+            <div class="w-16 h-16 bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl flex items-center justify-center mb-6 mx-auto shadow-md">
+                <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zM21 5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16l4-2 4 2V5z"/>
+                </svg>
+            </div>
+            <h3 class="text-2xl font-bold text-gray-800 mb-4 font-serif text-center group-hover:text-rose-600 transition-colors">Hair Coloring</h3>
+            <p class="text-base text-gray-600 mb-6 leading-relaxed text-center flex-grow">Premium coloring services including highlights, balayage, and complete color transformations</p>
+            <div class="text-center mt-auto">
+                <p class="text-rose-600 font-semibold text-lg mb-2">Starting from Rs.1,800</p>
+                <span class="inline-flex items-center text-rose-600 hover:text-rose-700 font-semibold group transition-colors duration-200">
+                    Learn More
+                    <svg class="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+                    </svg>
+                </span>
+            </div>
+        </a>
+
+        <a href="{{ route('services') }}" class="group bg-white/90 backdrop-blur-sm p-8 rounded-2xl shadow-md hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 border border-gray-100 h-full flex flex-col">
+            <div class="w-16 h-16 bg-gradient-to-br from-amber-500 to-amber-600 rounded-xl flex items-center justify-center mb-6 mx-auto shadow-md">
+                <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
+                </svg>
+            </div>
+            <h3 class="text-2xl font-bold text-gray-800 mb-4 font-serif text-center group-hover:text-rose-600 transition-colors">Spa Treatments</h3>
+            <p class="text-base text-gray-600 mb-6 leading-relaxed text-center flex-grow">Relaxing hair treatments, deep conditioning, and scalp therapy for ultimate hair health</p>
+            <div class="text-center mt-auto">
+                <p class="text-rose-600 font-semibold text-lg mb-2">Starting from Rs.900</p>
+                <span class="inline-flex items-center text-rose-600 hover:text-rose-700 font-semibold group transition-colors duration-200">
+                    Learn More
+                    <svg class="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+                    </svg>
+                </span>
+            </div>
+        </a>
+    </div>
+    @endif
+
     <!-- Latest Deals Carousel -->
     @if($deals && $deals->count() > 0)
     <div class="mt-24 bg-gray-50 rounded-2xl shadow-lg p-8 md:p-12 border border-gray-200 overflow-hidden relative">

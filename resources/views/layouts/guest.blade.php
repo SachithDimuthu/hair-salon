@@ -65,10 +65,23 @@
                                class="text-base font-semibold text-gray-600 hover:text-rose-600 transition-colors duration-200 px-4 py-2 rounded-lg hover:bg-rose-50">
                                 Book Service
                             </a>
-                            <a href="{{ route('admin.dashboard') }}" 
-                               class="text-base font-semibold text-gray-600 hover:text-rose-600 transition-colors duration-200 px-4 py-2 rounded-lg hover:bg-rose-50">
-                                Admin Portal
-                            </a>
+                            
+                            <!-- Search Component -->
+                            <div class="hidden lg:block w-80">
+                                {{-- @livewire('global-search') --}}
+                            </div>
+                            
+                            @auth
+                                <a href="{{ route('admin.dashboard') }}" 
+                                   class="text-base font-semibold text-gray-600 hover:text-rose-600 transition-colors duration-200 px-4 py-2 rounded-lg hover:bg-rose-50">
+                                    Admin Portal
+                                </a>
+                            @else
+                                <a href="{{ route('login') }}" 
+                                   class="text-base font-semibold text-gray-600 hover:text-rose-600 transition-colors duration-200 px-4 py-2 rounded-lg hover:bg-rose-50">
+                                    Login
+                                </a>
+                            @endauth
                         </div>
 
                         <!-- Mobile menu button -->
@@ -90,7 +103,17 @@
                             <a href="{{ route('about') }}" class="block px-4 py-3 text-base font-semibold text-gray-700 hover:bg-rose-50 hover:text-rose-600 rounded-lg transition-colors duration-200">About</a>
                             <a href="{{ route('contact') }}" class="block px-4 py-3 text-base font-semibold text-gray-700 hover:bg-rose-50 hover:text-rose-600 rounded-lg transition-colors duration-200">Contact</a>
                             <a href="{{ route('book-service') }}" class="block px-4 py-3 text-base font-semibold text-gray-700 hover:bg-rose-50 hover:text-rose-600 rounded-lg transition-colors duration-200">Book Service</a>
-                            <a href="{{ route('admin.dashboard') }}" class="block px-4 py-3 text-base font-semibold text-gray-700 hover:bg-rose-50 hover:text-rose-600 rounded-lg transition-colors duration-200">Admin Portal</a>
+                            
+                            <!-- Mobile Search -->
+                            <div class="px-4 py-3">
+                                {{-- @livewire('global-search') --}}
+                            </div>
+                            
+                            @auth
+                                <a href="{{ route('admin.dashboard') }}" class="block px-4 py-3 text-base font-semibold text-gray-700 hover:bg-rose-50 hover:text-rose-600 rounded-lg transition-colors duration-200">Admin Portal</a>
+                            @else
+                                <a href="{{ route('login') }}" class="block px-4 py-3 text-base font-semibold text-gray-700 hover:bg-rose-50 hover:text-rose-600 rounded-lg transition-colors duration-200">Login</a>
+                            @endauth
                         </div>
                     </div>
                 </div>

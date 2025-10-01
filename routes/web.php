@@ -24,11 +24,32 @@ Route::get('/', function () {
     return view('welcome');
 })->name('home');
 
+// Test route for debugging time slots without cache issues
+Route::get('/test-time-slots', function () {
+    return view('test-time-slots');
+})->name('test-time-slots');
+
 // Public pages
 Route::get('/services', function () {
     $services = \App\Models\Service::where('visibility', true)->orderBy('category')->get();
     return view('pages.services', compact('services'));
 })->name('services');
+
+Route::get('/services/{service}', function (\App\Models\Service $service) {
+    // Check if service is visible to public
+    if (!$service->visibility) {
+        abort(404);
+    }
+    
+    // Get related services from same category
+    $relatedServices = \App\Models\Service::where('visibility', true)
+        ->where('category', $service->category)
+        ->where('_id', '!=', $service->_id)
+        ->limit(3)
+        ->get();
+    
+    return view('pages.service-detail', compact('service', 'relatedServices'));
+})->name('service.show');
 
 Route::get('/about', function () {
     return view('pages.about');
@@ -124,6 +145,10 @@ Route::middleware([
         Route::get('/dashboard', function () {
             return view('components.layout', ['component' => 'dashboard']);
         })->name('dashboard');
+
+        Route::get('/bookings', function () {
+            return view('components.layout', ['component' => 'manage-bookings']);
+        })->name('bookings');
 
         Route::get('/customers', function () {
             return view('components.layout', ['component' => 'manage-customers']);

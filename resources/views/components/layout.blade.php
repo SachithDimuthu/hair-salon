@@ -33,27 +33,70 @@
                 <!-- Desktop Navigation -->
                 <div class="hidden md:flex items-center space-x-8">
                     <a href="{{ route('home') }}" 
-                       class="text-gray-600 hover:text-rose-600 font-medium transition-colors duration-200 {{ request()->routeIs('home') ? 'text-rose-600 border-b-2 border-rose-600 pb-1' : '' }}">
+                       class="text-base font-semibold text-gray-600 hover:text-rose-600 transition-colors duration-200 px-4 py-2 rounded-lg hover:bg-rose-50 {{ request()->routeIs('home') ? 'text-rose-600 bg-rose-50' : '' }}">
                         Home
                     </a>
+                    <a href="{{ route('services') }}" 
+                       class="text-base font-semibold text-gray-600 hover:text-rose-600 transition-colors duration-200 px-4 py-2 rounded-lg hover:bg-rose-50 {{ request()->routeIs('services') ? 'text-rose-600 bg-rose-50' : '' }}">
+                        Services
+                    </a>
+                    <a href="{{ route('about') }}" 
+                       class="text-base font-semibold text-gray-600 hover:text-rose-600 transition-colors duration-200 px-4 py-2 rounded-lg hover:bg-rose-50 {{ request()->routeIs('about') ? 'text-rose-600 bg-rose-50' : '' }}">
+                        About
+                    </a>
+                    <a href="{{ route('contact') }}" 
+                       class="text-base font-semibold text-gray-600 hover:text-rose-600 transition-colors duration-200 px-4 py-2 rounded-lg hover:bg-rose-50 {{ request()->routeIs('contact') ? 'text-rose-600 bg-rose-50' : '' }}">
+                        Contact
+                    </a>
                     <a href="{{ route('book-service') }}" 
-                       class="text-gray-600 hover:text-rose-600 font-medium transition-colors duration-200 {{ request()->routeIs('book-service') ? 'text-rose-600 border-b-2 border-rose-600 pb-1' : '' }}">
+                       class="text-base font-semibold text-gray-600 hover:text-rose-600 transition-colors duration-200 px-4 py-2 rounded-lg hover:bg-rose-50 {{ request()->routeIs('book-service') ? 'text-rose-600 bg-rose-50' : '' }}">
                         Book Service
                     </a>
                     
+                    <!-- Search Component -->
+                    <div class="hidden lg:block w-80">
+                        {{-- @livewire('global-search') --}}
+                    </div>
+                    
                     <!-- Admin Section -->
                     <div class="relative group">
-                        <button class="text-gray-600 hover:text-rose-600 font-medium transition-colors duration-200 flex items-center space-x-1">
+                        <button class="text-base font-semibold text-gray-600 hover:text-rose-600 transition-colors duration-200 px-4 py-2 rounded-lg hover:bg-rose-50 flex items-center space-x-1">
                             <span>Admin</span>
                             <svg class="w-4 h-4 transition-transform duration-200 group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                             </svg>
                         </button>
-                        <div class="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-lg border border-gray-100 py-2 invisible group-hover:visible opacity-0 group-hover:opacity-100 transition-all duration-200">
-                            <a href="{{ route('admin.dashboard') }}" class="block px-4 py-2 text-gray-700 hover:bg-gray-50 hover:text-rose-600 transition-colors duration-200">Dashboard</a>
-                            <a href="{{ route('admin.customers') }}" class="block px-4 py-2 text-gray-700 hover:bg-gray-50 hover:text-rose-600 transition-colors duration-200">Manage Customers</a>
-                            <a href="{{ route('admin.services') }}" class="block px-4 py-2 text-gray-700 hover:bg-gray-50 hover:text-rose-600 transition-colors duration-200">Manage Services</a>
-                            <a href="{{ route('admin.deals') }}" class="block px-4 py-2 text-gray-700 hover:bg-gray-50 hover:text-rose-600 transition-colors duration-200">Manage Deals</a>
+                        <div class="absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-lg border border-gray-200 py-2 invisible group-hover:visible opacity-0 group-hover:opacity-100 transition-all duration-200 z-50">
+                            <a href="{{ route('admin.dashboard') }}" class="flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-rose-50 hover:text-rose-600 transition-colors duration-200">
+                                <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2H9a2 2 0 01-2-2z"/>
+                                </svg>
+                                Dashboard
+                            </a>
+                            <a href="{{ route('admin.bookings') }}" class="flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-rose-50 hover:text-rose-600 transition-colors duration-200">
+                                <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                                </svg>
+                                Manage Bookings
+                            </a>
+                            <a href="{{ route('admin.customers') }}" class="flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-rose-50 hover:text-rose-600 transition-colors duration-200">
+                                <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"/>
+                                </svg>
+                                Manage Customers
+                            </a>
+                            <a href="{{ route('admin.services') }}" class="flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-rose-50 hover:text-rose-600 transition-colors duration-200">
+                                <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"/>
+                                </svg>
+                                Manage Services
+                            </a>
+                            <a href="{{ route('admin.deals') }}" class="flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-rose-50 hover:text-rose-600 transition-colors duration-200">
+                                <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"/>
+                                </svg>
+                                Manage Deals
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -71,15 +114,50 @@
             
             <!-- Mobile Navigation Menu -->
             <div x-ref="mobileMenu" class="hidden md:hidden border-t border-gray-100 py-4">
-                <div class="space-y-1">
-                    <a href="{{ route('home') }}" class="block px-4 py-2 text-gray-700 hover:bg-gray-50 rounded-lg transition-colors duration-200">Home</a>
-                    <a href="{{ route('book-service') }}" class="block px-4 py-2 text-gray-700 hover:bg-gray-50 rounded-lg transition-colors duration-200">Book Service</a>
-                    <div class="border-t border-gray-100 mt-2 pt-2">
-                        <div class="px-4 py-2 text-xs font-semibold text-gray-500 uppercase tracking-wide">Admin</div>
-                        <a href="{{ route('admin.dashboard') }}" class="block px-4 py-2 text-gray-700 hover:bg-gray-50 rounded-lg transition-colors duration-200">Dashboard</a>
-                        <a href="{{ route('admin.customers') }}" class="block px-4 py-2 text-gray-700 hover:bg-gray-50 rounded-lg transition-colors duration-200">Manage Customers</a>
-                        <a href="{{ route('admin.services') }}" class="block px-4 py-2 text-gray-700 hover:bg-gray-50 rounded-lg transition-colors duration-200">Manage Services</a>
-                        <a href="{{ route('admin.deals') }}" class="block px-4 py-2 text-gray-700 hover:bg-gray-50 rounded-lg transition-colors duration-200">Manage Deals</a>
+                <div class="space-y-2">
+                    <a href="{{ route('home') }}" class="block px-4 py-3 text-base font-semibold text-gray-700 hover:bg-rose-50 hover:text-rose-600 rounded-lg transition-colors duration-200 {{ request()->routeIs('home') ? 'text-rose-600 bg-rose-50' : '' }}">Home</a>
+                    <a href="{{ route('services') }}" class="block px-4 py-3 text-base font-semibold text-gray-700 hover:bg-rose-50 hover:text-rose-600 rounded-lg transition-colors duration-200 {{ request()->routeIs('services') ? 'text-rose-600 bg-rose-50' : '' }}">Services</a>
+                    <a href="{{ route('about') }}" class="block px-4 py-3 text-base font-semibold text-gray-700 hover:bg-rose-50 hover:text-rose-600 rounded-lg transition-colors duration-200 {{ request()->routeIs('about') ? 'text-rose-600 bg-rose-50' : '' }}">About</a>
+                    <a href="{{ route('contact') }}" class="block px-4 py-3 text-base font-semibold text-gray-700 hover:bg-rose-50 hover:text-rose-600 rounded-lg transition-colors duration-200 {{ request()->routeIs('contact') ? 'text-rose-600 bg-rose-50' : '' }}">Contact</a>
+                    <a href="{{ route('book-service') }}" class="block px-4 py-3 text-base font-semibold text-gray-700 hover:bg-rose-50 hover:text-rose-600 rounded-lg transition-colors duration-200 {{ request()->routeIs('book-service') ? 'text-rose-600 bg-rose-50' : '' }}">Book Service</a>
+                    
+                    <!-- Mobile Search -->
+                    <div class="px-4 py-3">
+                        {{-- @livewire('global-search') --}}
+                    </div>
+                    
+                    <div class="border-t border-gray-100 mt-4 pt-4">
+                        <div class="px-4 py-2 text-xs font-semibold text-gray-500 uppercase tracking-wide">Admin Panel</div>
+                        <a href="{{ route('admin.dashboard') }}" class="flex items-center px-4 py-3 text-base font-semibold text-gray-700 hover:bg-rose-50 hover:text-rose-600 rounded-lg transition-colors duration-200">
+                            <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2H9a2 2 0 01-2-2z"/>
+                            </svg>
+                            Dashboard
+                        </a>
+                        <a href="{{ route('admin.bookings') }}" class="flex items-center px-4 py-3 text-base font-semibold text-gray-700 hover:bg-rose-50 hover:text-rose-600 rounded-lg transition-colors duration-200">
+                            <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                            </svg>
+                            Manage Bookings
+                        </a>
+                        <a href="{{ route('admin.customers') }}" class="flex items-center px-4 py-3 text-base font-semibold text-gray-700 hover:bg-rose-50 hover:text-rose-600 rounded-lg transition-colors duration-200">
+                            <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"/>
+                            </svg>
+                            Manage Customers
+                        </a>
+                        <a href="{{ route('admin.services') }}" class="flex items-center px-4 py-3 text-base font-semibold text-gray-700 hover:bg-rose-50 hover:text-rose-600 rounded-lg transition-colors duration-200">
+                            <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"/>
+                            </svg>
+                            Manage Services
+                        </a>
+                        <a href="{{ route('admin.deals') }}" class="flex items-center px-4 py-3 text-base font-semibold text-gray-700 hover:bg-rose-50 hover:text-rose-600 rounded-lg transition-colors duration-200">
+                            <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"/>
+                            </svg>
+                            Manage Deals
+                        </a>
                     </div>
                 </div>
             </div>
@@ -92,6 +170,8 @@
             @livewire('book-service')
         @elseif($component === 'dashboard')
             @livewire('dashboard')
+        @elseif($component === 'manage-bookings')
+            @livewire('manage-bookings')
         @elseif($component === 'manage-customers')
             @livewire('manage-customers')
         @elseif($component === 'manage-services')

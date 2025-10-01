@@ -21,11 +21,12 @@
             @if($services->count() > 0)
                 <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
                     @foreach($services as $service)
-                        <div class="bg-white rounded-2xl shadow-lg p-8 border border-rose-100/50 hover:shadow-xl transition-all duration-300 hover:scale-105">
+                        <a href="{{ route('service.show', $service) }}" 
+                           class="group bg-white rounded-2xl shadow-lg p-8 border border-rose-100/50 hover:shadow-xl transition-all duration-300 hover:scale-105 block">
                             @if($service->image)
                                 <div class="w-full h-48 mb-6 rounded-xl overflow-hidden">
                                     <img src="{{ asset($service->image) }}" alt="{{ $service->name }}" 
-                                         class="w-full h-full object-cover">
+                                         class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300">
                                 </div>
                             @else
                                 <div class="w-16 h-16 bg-gradient-to-br from-rose-500 to-pink-600 rounded-2xl flex items-center justify-center mb-6">
@@ -35,7 +36,7 @@
                                 </div>
                             @endif
                             
-                            <h3 class="text-2xl font-bold text-gray-900 mb-4">{{ $service->name }}</h3>
+                            <h3 class="text-2xl font-bold text-gray-900 mb-4 group-hover:text-rose-600 transition-colors">{{ $service->name }}</h3>
                             <p class="text-gray-600 mb-4">{{ Str::limit($service->description, 120) }}</p>
                             
                             @if($service->category)
@@ -56,8 +57,14 @@
                                         <span class="text-sm text-gray-900">{{ isset($service->durations[0]['minutes']) ? $service->durations[0]['minutes'] : '60' }} min</span>
                                     </div>
                                 @endif
+                                
+                                <div class="pt-2">
+                                    <span class="text-sm text-rose-600 font-medium group-hover:text-rose-700">
+                                        View Details →
+                                    </span>
+                                </div>
                             </div>
-                        </div>
+                        </a>
                     @endforeach
                 </div>
             @else
