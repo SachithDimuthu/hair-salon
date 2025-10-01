@@ -9,15 +9,13 @@ use Carbon\Carbon;
 class BookService extends Component
 {
     public $currentStep = 1;
-    public $maxSteps = 5;
+    public $maxSteps = 4;
     public $services = [];
     public $selectedServiceId = null;
     public $selectedService = null;
     public $bookingDate = null;
     public $bookingTime = null;
     public $availableTimeSlots = [];
-    public $selectedStaff = null;
-    public $staffMembers = [];
     public $firstName = '';
     public $lastName = '';
     public $email = '';
@@ -32,7 +30,6 @@ class BookService extends Component
     public function mount()
     {
         $this->loadServices();
-        $this->loadStaffMembers();
         $this->generateTimeSlots();
     }
 
@@ -75,41 +72,6 @@ class BookService extends Component
         }
     }
 
-    public function loadStaffMembers()
-    {
-        // For now, we'll use dummy staff data. In production, this would come from a Staff model
-        $this->staffMembers = [
-            [
-                'id' => 1,
-                'name' => 'Sarah Johnson',
-                'specialization' => 'Hair Styling & Coloring',
-                'experience' => '5+ years',
-                'image' => 'images/staff/sarah.jpg'
-            ],
-            [
-                'id' => 2,
-                'name' => 'Emily Chen',
-                'specialization' => 'Facial & Skin Care',
-                'experience' => '7+ years',
-                'image' => 'images/staff/emily.jpg'
-            ],
-            [
-                'id' => 3,
-                'name' => 'Maria Garcia',
-                'specialization' => 'Nail Care & Art',
-                'experience' => '4+ years',
-                'image' => 'images/staff/maria.jpg'
-            ],
-            [
-                'id' => 4,
-                'name' => 'Any Available Staff',
-                'specialization' => 'All Services',
-                'experience' => 'Varies',
-                'image' => null
-            ]
-        ];
-    }
-
     public function generateTimeSlots()
     {
         $this->availableTimeSlots = [
@@ -147,12 +109,7 @@ class BookService extends Component
         $this->messageType = 'success';
     }
 
-    public function selectStaff($staffId)
-    {
-        $this->selectedStaff = collect($this->staffMembers)->firstWhere('id', $staffId);
-        $this->message = 'Staff member selected: ' . ($this->selectedStaff['name'] ?? 'Unknown');
-        $this->messageType = 'success';
-    }
+
 
     public function nextStep()
     {
@@ -229,7 +186,6 @@ class BookService extends Component
         $this->selectedService = null;
         $this->bookingDate = null;
         $this->bookingTime = null;
-        $this->selectedStaff = null;
         $this->firstName = '';
         $this->lastName = '';
         $this->email = '';

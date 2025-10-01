@@ -64,8 +64,7 @@
                                                 @if($i == 1) Service
                                                 @elseif($i == 2) Date
                                                 @elseif($i == 3) Time
-                                                @elseif($i == 4) Staff
-                                                @elseif($i == 5) Details
+                                                @elseif($i == 4) Details
                                                 @endif
                                             </span>
                                         </div>
@@ -253,55 +252,8 @@
                         </div>
                     @endif
 
-                    <!-- Step 4: Staff Selection -->
+                    <!-- Step 4: Customer Details & Confirmation -->
                     @if($currentStep == 4)
-                        <div class="p-8">
-                            <div class="text-center mb-8">
-                                <h2 class="text-2xl font-bold text-gray-900 mb-2">Choose Your Stylist</h2>
-                                <p class="text-gray-600">Select your preferred staff member</p>
-                            </div>
-
-                            <div class="max-w-4xl mx-auto">
-                                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                                    @foreach($staffMembers as $staff)
-                                        <div wire:click="selectStaff({{ $staff['id'] }})"
-                                             class="cursor-pointer border-2 rounded-xl p-6 text-center transition-all duration-300 hover:shadow-lg {{ $selectedStaff && $selectedStaff['id'] == $staff['id'] ? 'border-rose-500 bg-rose-50' : 'border-gray-200 hover:border-rose-300' }}">
-                                            
-                                            <div class="w-20 h-20 mx-auto mb-4 rounded-full overflow-hidden bg-gray-200">
-                                                @if($staff['image'])
-                                                    <img src="{{ asset($staff['image']) }}" alt="{{ $staff['name'] }}" class="w-full h-full object-cover">
-                                                @else
-                                                    <div class="w-full h-full bg-gradient-to-br from-rose-200 to-pink-300 flex items-center justify-center">
-                                                        <svg class="w-8 h-8 text-rose-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
-                                                        </svg>
-                                                    </div>
-                                                @endif
-                                            </div>
-                                            
-                                            <h3 class="font-semibold text-gray-900 mb-2">{{ $staff['name'] }}</h3>
-                                            <p class="text-sm text-gray-600 mb-1">{{ $staff['specialization'] }}</p>
-                                            <p class="text-xs text-gray-500">{{ $staff['experience'] }}</p>
-                                            
-                                            @if($selectedStaff && $selectedStaff['id'] == $staff['id'])
-                                                <div class="mt-3">
-                                                    <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-rose-100 text-rose-800">
-                                                        <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                                                            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
-                                                        </svg>
-                                                        Selected
-                                                    </span>
-                                                </div>
-                                            @endif
-                                        </div>
-                                    @endforeach
-                                </div>
-                            </div>
-                        </div>
-                    @endif
-
-                    <!-- Step 5: Customer Details & Confirmation -->
-                    @if($currentStep == 5)
                         <div class="p-8">
                             <div class="text-center mb-8">
                                 <h2 class="text-2xl font-bold text-gray-900 mb-2">Your Details & Confirmation</h2>
@@ -388,11 +340,6 @@
                                         <div class="flex justify-between items-center py-2 border-b border-rose-200">
                                             <span class="text-gray-600">Time:</span>
                                             <span class="font-medium text-gray-900">{{ $bookingTime ?? 'N/A' }}</span>
-                                        </div>
-                                        
-                                        <div class="flex justify-between items-center py-2 border-b border-rose-200">
-                                            <span class="text-gray-600">Stylist:</span>
-                                            <span class="font-medium text-gray-900">{{ $selectedStaff['name'] ?? 'N/A' }}</span>
                                         </div>
                                         
                                         <div class="flex justify-between items-center py-2 border-b border-rose-200">
