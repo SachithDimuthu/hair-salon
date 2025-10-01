@@ -2,13 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Appointment;
-use App\Models\Customer;
-use App\Models\Order;
+use App\Models\Booking;
 use App\Models\Service;
-use App\Models\Staff;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
 
 class DashboardController extends Controller
 {
@@ -32,50 +31,63 @@ class DashboardController extends Controller
      */
     public function admin()
     {
+        // Real-time booking analytics
         $stats = [
-            'total_customers' => Customer::count(),
-            'total_staff' => Staff::where('is_active', true)->count(),
-            'total_services' => Service::where('is_active', true)->count(),
-            'total_appointments' => Appointment::count(),
-            'todays_appointments' => Appointment::whereDate('appointment_date', today())->count(),
-            'pending_appointments' => Appointment::where('status', 'pending')->count(),
-            'monthly_revenue' => Order::whereMonth('created_at', now()->month)
-                ->whereYear('created_at', now()->year)
-                ->sum('total_amount'),
-            'weekly_revenue' => Order::whereBetween('created_at', [
-                now()->startOfWeek(), 
-                now()->endOfWeek()
-            ])->sum('total_amount'),
-            'new_customers_this_month' => Customer::whereMonth('created_at', now()->month)
-                ->whereYear('created_at', now()->year)
+            // Booking Statistics
+            'total_bookings' => Booking::count(),
+            'todays_bookings' => Booking::today()->count(),
+            'pending_bookings' => Booking::byStatus('pending')->count(),
+            'confirmed_bookings' => Booking::byStatus('confirmed')->count(),
+            'completed_bookings' => Booking::byStatus('completed')->count(),
+            
+            // Revenue Statistics
+            'monthly_revenue' => Booking::thisMonth()
+                ->whereIn('status', ['confirmed', 'completed'])
+                ->sum('total_price'),
+            'today_revenue' => Booking::getTodayRevenue(),
+            'avg_booking_value' => Booking::whereIn('status', ['confirmed', 'completed'])
+                ->avg('total_price') ?? 0,
+            
+            // Service Statistics
+            'total_services' => Service::count(),
+            'active_services' => Service::where('visibility', true)->count(),
+            
+            // Customer Statistics
+            'unique_customers' => Booking::distinct('customer_email')->count(),
+            'new_customers_today' => Booking::whereDate('created_at', today())
+                ->distinct('customer_email')
                 ->count(),
-            'vip_customers' => Customer::where('total_spent', '>', 1000)->count(), // VIP customers with $1000+ spent
-            'active_staff' => Staff::where('is_active', true)->count(),
-            'completed_appointments_today' => Appointment::whereDate('appointment_date', today())
-                ->where('status', 'completed')
-                ->count(),
-            'avg_appointment_value' => Order::avg('total_amount') ?? 0,
         ];
 
-        $recentAppointments = Appointment::with(['customer', 'staff', 'service'])
+        // Recent bookings for management table
+        $recentBookings = Booking::with(['customer'])
             ->orderBy('created_at', 'desc')
-            ->take(5)
+            ->take(10)
             ->get();
 
-        // Additional analytics data
-        $topServices = Service::withCount('appointmentServices')
-            ->where('is_active', true)
-            ->orderBy('appointment_services_count', 'desc')
-            ->take(5)
+        // Booking status distribution for charts
+        $bookingStatusDistribution = Booking::getStatusDistribution();
+
+        // Most popular services based on actual bookings
+        $popularServices = Booking::getPopularServices(5);
+
+        // Booking trends for the last 6 months
+        $bookingTrends = Booking::getMonthlyTrends(6);
+
+        // Today's upcoming bookings
+        $todaysBookings = Booking::today()
+            ->whereIn('status', ['pending', 'confirmed'])
+            ->orderBy('booking_time')
             ->get();
 
-        $topStaff = Staff::withCount('appointments')
-            ->where('is_active', true)
-            ->orderBy('appointments_count', 'desc')
-            ->take(5)
-            ->get();
-
-        return view('dashboard.admin', compact('stats', 'recentAppointments', 'topServices', 'topStaff'));
+        return view('dashboard.admin', compact(
+            'stats', 
+            'recentBookings', 
+            'bookingStatusDistribution',
+            'popularServices',
+            'bookingTrends',
+            'todaysBookings'
+        ));
     }
 
     /**
@@ -84,33 +96,19 @@ class DashboardController extends Controller
     public function staff()
     {
         $user = Auth::user();
-        $staffRecord = $user->staff;
 
         $stats = [
-            'todays_appointments' => Appointment::where('staff_id', $staffRecord->id)
-                ->whereDate('appointment_date', today())
-                ->count(),
-            'pending_appointments' => Appointment::where('staff_id', $staffRecord->id)
-                ->where('status', 'pending')
-                ->count(),
-            'completed_appointments' => Appointment::where('staff_id', $staffRecord->id)
-                ->where('status', 'completed')
-                ->count(),
-            'monthly_revenue' => Order::whereHas('appointments', function($query) use ($staffRecord) {
-                $query->where('staff_id', $staffRecord->id);
-            })
-                ->whereMonth('created_at', now()->month)
-                ->whereYear('created_at', now()->year)
-                ->sum('total_amount'),
+            'todays_bookings' => Booking::today()->count(),
+            'pending_bookings' => Booking::byStatus('pending')->count(),
+            'completed_bookings' => Booking::byStatus('completed')->count(),
+            'monthly_revenue' => Booking::getMonthlyRevenue(),
         ];
 
-        $appointments = Appointment::with(['customer', 'service'])
-            ->where('staff_id', $staffRecord->id)
-            ->whereDate('appointment_date', today())
-            ->orderBy('appointment_time')
+        $todaysBookings = Booking::today()
+            ->orderBy('booking_time')
             ->get();
 
-        return view('dashboard.staff', compact('stats', 'appointments'));
+        return view('dashboard.staff', compact('stats', 'todaysBookings'));
     }
 
     /**
@@ -119,31 +117,24 @@ class DashboardController extends Controller
     public function customer()
     {
         $user = Auth::user();
-        $customerRecord = $user->customer;
 
         $stats = [
-            'total_appointments' => Appointment::where('customer_id', $customerRecord->id)->count(),
-            'upcoming_appointments' => Appointment::where('customer_id', $customerRecord->id)
-                ->where('appointment_date', '>=', today())
+            'total_bookings' => Booking::where('customer_email', $user->email)->count(),
+            'upcoming_bookings' => Booking::where('customer_email', $user->email)
+                ->where('booking_date', '>=', today())
                 ->count(),
-            'total_orders' => Order::where('customer_id', $customerRecord->id)->count(),
-            'total_spent' => Order::where('customer_id', $customerRecord->id)->sum('total_amount'),
+            'total_spent' => Booking::where('customer_email', $user->email)
+                ->whereIn('status', ['confirmed', 'completed'])
+                ->sum('total_price'),
         ];
 
-        $upcomingAppointments = Appointment::with(['staff', 'service'])
-            ->where('customer_id', $customerRecord->id)
-            ->where('appointment_date', '>=', today())
-            ->orderBy('appointment_date')
-            ->orderBy('appointment_time')
+        $upcomingBookings = Booking::where('customer_email', $user->email)
+            ->where('booking_date', '>=', today())
+            ->orderBy('booking_date')
+            ->orderBy('booking_time')
             ->take(3)
             ->get();
 
-        $recentOrders = Order::with('orderItems.service')
-            ->where('customer_id', $customerRecord->id)
-            ->orderBy('created_at', 'desc')
-            ->take(3)
-            ->get();
-
-        return view('dashboard.customer', compact('stats', 'upcomingAppointments', 'recentOrders'));
+        return view('dashboard.customer', compact('stats', 'upcomingBookings'));
     }
 }

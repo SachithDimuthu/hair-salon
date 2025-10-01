@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\DashboardController;
 
 /*
 |--------------------------------------------------------------------------
@@ -147,13 +148,11 @@ Route::middleware([
     // Admin web interface routes (Livewire components)
     Route::prefix('admin')->name('admin.')->middleware('admin')->group(function () {
         
-        Route::get('/dashboard', function () {
-            return view('components.layout', ['component' => 'dashboard']);
-        })->name('dashboard');
+        Route::get('/dashboard', [DashboardController::class, 'admin'])->name('dashboard');
 
         Route::get('/bookings', function () {
             return view('components.layout', ['component' => 'manage-bookings']);
-        })->name('bookings');
+        })->name('bookings.index');
 
         Route::get('/customers', function () {
             return view('components.layout', ['component' => 'manage-customers']);

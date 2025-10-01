@@ -5,7 +5,8 @@ namespace App\Livewire;
 use Livewire\Component;
 use Livewire\WithPagination;
 use App\Models\Service;
-use App\Models\Customer;
+use App\Models\Booking;
+use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 
@@ -52,25 +53,13 @@ class ManageBookings extends Component
         $thisMonth = Carbon::now()->startOfMonth();
 
         $this->stats = [
-            'total_bookings' => DB::table('customer_service')->count(),
-            'today_bookings' => DB::table('customer_service')
-                ->whereDate('BookedAt', $today)
-                ->count(),
-            'week_bookings' => DB::table('customer_service')
-                ->where('BookedAt', '>=', $thisWeek)
-                ->count(),
-            'month_bookings' => DB::table('customer_service')
-                ->where('BookedAt', '>=', $thisMonth)
-                ->count(),
-            'pending_bookings' => DB::table('customer_service')
-                ->where('Status', 'pending')
-                ->count(),
-            'confirmed_bookings' => DB::table('customer_service')
-                ->where('Status', 'confirmed')
-                ->count(),
-            'completed_bookings' => DB::table('customer_service')
-                ->where('Status', 'completed')
-                ->count(),
+            'total_bookings' => Booking::count(),
+            'today_bookings' => Booking::whereDate('booking_date', $today)->count(),
+            'week_bookings' => Booking::where('created_at', '>=', $thisWeek)->count(),
+            'month_bookings' => Booking::where('created_at', '>=', $thisMonth)->count(),
+            'pending_bookings' => Booking::where('status', 'pending')->count(),
+            'confirmed_bookings' => Booking::where('status', 'confirmed')->count(),
+            'completed_bookings' => Booking::where('status', 'completed')->count(),
         ];
     }
 
@@ -107,75 +96,83 @@ class ManageBookings extends Component
 
     public function getBookingsProperty()
     {
-        $query = DB::table('customer_service')
-            ->join('customers', 'customer_service.CustomerID', '=', 'customers.CustomerID')
-            ->select(
-                'customer_service.*',
-                'customers.CustomerName',
-                'customers.Email as CustomerEmail',
-                'customers.PhoneNumber as CustomerPhone'
-            );
+        $query = Booking::query();
 
-        // Apply filters
+        // Apply search filters
         if ($this->search) {
             $query->where(function($q) {
-                $q->where('customers.CustomerName', 'like', '%' . $this->search . '%')
-                  ->orWhere('customers.Email', 'like', '%' . $this->search . '%')
-                  ->orWhere('customers.PhoneNumber', 'like', '%' . $this->search . '%');
+                $q->where('customer_first_name', 'like', '%' . $this->search . '%')
+                  ->orWhere('customer_last_name', 'like', '%' . $this->search . '%')
+                  ->orWhere('customer_email', 'like', '%' . $this->search . '%')
+                  ->orWhere('customer_phone', 'like', '%' . $this->search . '%')
+                  ->orWhere('service_name', 'like', '%' . $this->search . '%');
             });
         }
 
+        // Apply status filter
         if ($this->statusFilter) {
-            $query->where('customer_service.Status', $this->statusFilter);
+            $query->where('status', $this->statusFilter);
         }
 
+        // Apply date filter
         if ($this->dateFilter) {
             switch ($this->dateFilter) {
                 case 'today':
-                    $query->whereDate('customer_service.BookedAt', Carbon::today());
+                    $query->whereDate('booking_date', Carbon::today());
                     break;
                 case 'tomorrow':
-                    $query->whereDate('customer_service.BookedAt', Carbon::tomorrow());
+                    $query->whereDate('booking_date', Carbon::tomorrow());
                     break;
                 case 'this_week':
-                    $query->whereBetween('customer_service.BookedAt', [
+                    $query->whereBetween('booking_date', [
                         Carbon::now()->startOfWeek(),
                         Carbon::now()->endOfWeek()
                     ]);
                     break;
                 case 'next_week':
-                    $query->whereBetween('customer_service.BookedAt', [
+                    $query->whereBetween('booking_date', [
                         Carbon::now()->addWeek()->startOfWeek(),
                         Carbon::now()->addWeek()->endOfWeek()
                     ]);
                     break;
                 case 'this_month':
-                    $query->whereMonth('customer_service.BookedAt', Carbon::now()->month)
-                          ->whereYear('customer_service.BookedAt', Carbon::now()->year);
+                    $query->whereRaw("strftime('%m', booking_date) = ?", [Carbon::now()->format('m')])
+                          ->whereRaw("strftime('%Y', booking_date) = ?", [Carbon::now()->format('Y')]);
                     break;
             }
         }
 
+        // Apply service filter
         if ($this->serviceFilter) {
-            $query->where('customer_service.ServiceID', $this->serviceFilter);
+            $query->where('service_id', $this->serviceFilter);
         }
 
-        // Apply sorting
-        $query->orderBy('customer_service.' . $this->sortBy, $this->sortDirection);
+        // Apply sorting (map old field names to new ones)
+        $sortField = $this->sortBy;
+        if ($sortField === 'BookedAt') {
+            $sortField = 'created_at';
+        }
+        
+        $query->orderBy($sortField, $this->sortDirection);
 
         // Get paginated results
         $bookings = $query->paginate($this->perPage);
 
-        // Enhance with service information
+        // Add formatted fields for the view
         $bookings->getCollection()->transform(function ($booking) {
-            $service = Service::find($booking->ServiceID);
-            $booking->ServiceName = $service ? $service->name : 'Unknown Service';
-            $booking->ServicePrice = $service ? $service->base_price : 0;
-            $booking->ServiceCategory = $service ? $service->category : 'Unknown';
+            // Add computed fields for compatibility
+            $booking->CustomerName = $booking->customer_first_name . ' ' . $booking->customer_last_name;
+            $booking->CustomerEmail = $booking->customer_email;
+            $booking->CustomerPhone = $booking->customer_phone;
+            $booking->ServiceName = $booking->service_name;
+            $booking->ServicePrice = $booking->service_price;
+            $booking->Status = $booking->status;
             
             // Format dates
-            $booking->FormattedBookedAt = Carbon::parse($booking->BookedAt)->format('M j, Y g:i A');
-            $booking->RelativeBookedAt = Carbon::parse($booking->BookedAt)->diffForHumans();
+            $bookingDateTime = Carbon::parse($booking->booking_date . ' ' . $booking->booking_time);
+            $booking->FormattedBookedAt = $bookingDateTime->format('M j, Y g:i A');
+            $booking->RelativeBookedAt = $bookingDateTime->diffForHumans();
+            $booking->BookedAt = $booking->created_at; // For compatibility
             
             return $booking;
         });
@@ -183,27 +180,21 @@ class ManageBookings extends Component
         return $bookings;
     }
 
-    public function viewBooking($bookingId, $customerId)
+    public function viewBooking($bookingId)
     {
-        $this->selectedBooking = DB::table('customer_service')
-            ->join('customers', 'customer_service.CustomerID', '=', 'customers.CustomerID')
-            ->where('customer_service.CustomerID', $customerId)
-            ->where('customer_service.ServiceID', $bookingId)
-            ->select(
-                'customer_service.*',
-                'customers.CustomerName',
-                'customers.Email as CustomerEmail',
-                'customers.PhoneNumber as CustomerPhone'
-            )
-            ->first();
+        $this->selectedBooking = Booking::find($bookingId);
 
         if ($this->selectedBooking) {
-            $service = Service::find($this->selectedBooking->ServiceID);
-            $this->selectedBooking->ServiceName = $service ? $service->name : 'Unknown Service';
-            $this->selectedBooking->ServicePrice = $service ? $service->base_price : 0;
-            $this->selectedBooking->ServiceCategory = $service ? $service->category : 'Unknown';
+            // Add computed fields for compatibility with the view
+            $this->selectedBooking->CustomerName = $this->selectedBooking->customer_first_name . ' ' . $this->selectedBooking->customer_last_name;
+            $this->selectedBooking->CustomerEmail = $this->selectedBooking->customer_email;
+            $this->selectedBooking->CustomerPhone = $this->selectedBooking->customer_phone;
+            $this->selectedBooking->ServiceName = $this->selectedBooking->service_name;
+            $this->selectedBooking->ServicePrice = $this->selectedBooking->service_price;
+            $this->selectedBooking->Status = $this->selectedBooking->status;
             
-            $this->newStatus = $this->selectedBooking->Status;
+            $this->newStatus = $this->selectedBooking->status;
+            $this->adminNotes = $this->selectedBooking->admin_notes ?? '';
             $this->showBookingModal = true;
         }
     }
@@ -214,14 +205,13 @@ class ManageBookings extends Component
             return;
         }
 
-        DB::table('customer_service')
-            ->where('CustomerID', $this->selectedBooking->CustomerID)
-            ->where('ServiceID', $this->selectedBooking->ServiceID)
-            ->update([
-                'Status' => $this->newStatus,
-                'AdminNotes' => $this->adminNotes,
-                'updated_at' => now()
+        $booking = Booking::find($this->selectedBooking->id);
+        if ($booking) {
+            $booking->update([
+                'status' => $this->newStatus,
+                'admin_notes' => $this->adminNotes,
             ]);
+        }
 
         // In a real application, you might send email notifications here
         $this->closeModal();
@@ -229,12 +219,12 @@ class ManageBookings extends Component
         session()->flash('message', 'Booking status updated successfully!');
     }
 
-    public function deleteBooking($customerId, $serviceId)
+    public function deleteBooking($bookingId)
     {
-        DB::table('customer_service')
-            ->where('CustomerID', $customerId)
-            ->where('ServiceID', $serviceId)
-            ->delete();
+        $booking = Booking::find($bookingId);
+        if ($booking) {
+            $booking->delete();
+        }
 
         $this->loadStats();
         session()->flash('message', 'Booking deleted successfully!');

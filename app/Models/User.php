@@ -77,6 +77,23 @@ class User extends Authenticatable
         return $this->hasOne(Staff::class);
     }
 
+    // Booking relationships
+    public function customerBookings()
+    {
+        return $this->hasMany(Booking::class, 'customer_id');
+    }
+
+    public function staffBookings()
+    {
+        return $this->hasMany(Booking::class, 'staff_id');
+    }
+
+    // Get bookings by email (for guest bookings)
+    public function bookingsByEmail()
+    {
+        return Booking::where('customer_email', $this->email);
+    }
+
     // Role-based helper methods
     public function isAdmin(): bool
     {

@@ -4,8 +4,10 @@ namespace App\Livewire;
 
 use Livewire\Component;
 use App\Models\Service;
+use App\Models\Booking;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
 
 class BookService extends Component
 {
@@ -203,21 +205,28 @@ class BookService extends Component
             
             $this->validate($rules);
             
-            Log::info('Validation passed, setting confirmation');
+            Log::info('Validation passed, saving booking to database');
             
-            // Set confirmation state
-            $this->isConfirmed = true;
-            $this->message = 'Booking confirmed successfully! You will receive a confirmation email shortly.';
-            $this->messageType = 'success';
+            // Save booking to database
+            $booking = $this->saveBooking();
             
-            Log::info('Booking confirmation completed');
-            
-            // Emit event for potential toast notification
-            $this->dispatch('notify', [
-                'type' => 'success',
-                'message' => 'Booking confirmed successfully!',
-                'title' => 'Success'
-            ]);
+            if ($booking) {
+                // Set confirmation state
+                $this->isConfirmed = true;
+                $this->message = 'Booking confirmed successfully! You will receive a confirmation email shortly.';
+                $this->messageType = 'success';
+                
+                Log::info('Booking saved successfully', ['booking_id' => $booking->id]);
+                
+                // Emit event for potential toast notification
+                $this->dispatch('notify', [
+                    'type' => 'success',
+                    'message' => 'Booking confirmed successfully!',
+                    'title' => 'Success'
+                ]);
+            } else {
+                throw new \Exception('Failed to save booking to database');
+            }
             
         } catch (\Illuminate\Validation\ValidationException $e) {
             Log::error('Validation failed', ['errors' => $e->errors()]);
@@ -241,6 +250,48 @@ class BookService extends Component
                 'message' => 'Error confirming booking. Please try again.',
                 'title' => 'Booking Error'
             ]);
+        }
+    }
+
+    private function saveBooking()
+    {
+        try {
+            // Get current user if authenticated
+            $customerId = Auth::check() ? Auth::id() : null;
+            
+            // Prepare booking data
+            $bookingData = [
+                'customer_id' => $customerId,
+                'customer_first_name' => $this->firstName,
+                'customer_last_name' => $this->lastName,
+                'customer_email' => $this->email,
+                'customer_phone' => $this->phone,
+                'service_id' => $this->selectedServiceId,
+                'service_name' => $this->selectedService['name'] ?? 'Unknown Service',
+                'service_price' => $this->selectedService['base_price'] ?? 0,
+                'booking_date' => $this->bookingDate,
+                'booking_time' => $this->bookingTime,
+                'duration_minutes' => $this->estimatedDuration,
+                'total_price' => $this->totalPrice,
+                'special_requests' => $this->specialRequests,
+                'status' => 'pending'
+            ];
+            
+            Log::info('Creating booking with data', $bookingData);
+            
+            // Create booking
+            $booking = Booking::create($bookingData);
+            
+            Log::info('Booking created successfully', ['booking_id' => $booking->id]);
+            
+            return $booking;
+            
+        } catch (\Exception $e) {
+            Log::error('Error saving booking', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            return null;
         }
     }
 

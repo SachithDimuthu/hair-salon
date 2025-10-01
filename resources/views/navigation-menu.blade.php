@@ -17,13 +17,13 @@
                     </x-nav-link>
                     
                     @if(auth()->user()->role === 'admin')
-                        <x-nav-link href="{{ route('admin.customers.index') }}" :active="request()->routeIs('admin.customers.*')">
+                        <x-nav-link href="{{ route('admin.customers') }}" :active="request()->routeIs('admin.customers')">
                             {{ __('Customers') }}
                         </x-nav-link>
-                        <x-nav-link href="{{ route('admin.staff.index') }}" :active="request()->routeIs('admin.staff.*')">
-                            {{ __('Staff') }}
+                        <x-nav-link href="{{ route('admin.customers') }}" :active="request()->routeIs('admin.customers')">
+                            {{ __('Customer Management') }}
                         </x-nav-link>
-                        <x-nav-link href="{{ route('admin.services.index') }}" :active="request()->routeIs('admin.services.*')">
+                        <x-nav-link href="{{ route('admin.services') }}" :active="request()->routeIs('admin.services')">
                             {{ __('Services') }}
                         </x-nav-link>
                     @endif
@@ -156,13 +156,13 @@
             </x-responsive-nav-link>
             
             @if(auth()->user()->role === 'admin')
-                <x-responsive-nav-link href="{{ route('admin.customers.index') }}" :active="request()->routeIs('admin.customers.*')">
+                <x-responsive-nav-link href="{{ route('admin.customers') }}" :active="request()->routeIs('admin.customers')">
                     {{ __('Customers') }}
                 </x-responsive-nav-link>
-                <x-responsive-nav-link href="{{ route('admin.staff.index') }}" :active="request()->routeIs('admin.staff.*')">
-                    {{ __('Staff') }}
+                <x-responsive-nav-link href="{{ route('admin.bookings.index') }}" :active="request()->routeIs('admin.bookings.index')">
+                    {{ __('Bookings') }}
                 </x-responsive-nav-link>
-                <x-responsive-nav-link href="{{ route('admin.services.index') }}" :active="request()->routeIs('admin.services.*')">
+                <x-responsive-nav-link href="{{ route('admin.services') }}" :active="request()->routeIs('admin.services')">
                     {{ __('Services') }}
                 </x-responsive-nav-link>
             @endif

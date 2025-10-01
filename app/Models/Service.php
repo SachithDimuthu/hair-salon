@@ -99,4 +99,24 @@ class Service extends Model
         }
         return (float) $value;
     }
+
+    // Relationship with bookings (SQL to MongoDB)
+    public function bookings()
+    {
+        return \App\Models\Booking::where('service_id', (string) $this->_id);
+    }
+
+    // Get booking count for this service
+    public function getBookingCountAttribute()
+    {
+        return $this->bookings()->count();
+    }
+
+    // Get total revenue from this service
+    public function getTotalRevenueAttribute()
+    {
+        return $this->bookings()
+            ->whereIn('status', ['confirmed', 'completed'])
+            ->sum('total_price');
+    }
 }
