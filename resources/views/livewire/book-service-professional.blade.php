@@ -258,15 +258,6 @@
                             <div class="text-center mb-8">
                                 <h2 class="text-2xl font-bold text-gray-900 mb-2">Your Details & Confirmation</h2>
                                 <p class="text-gray-600">Please provide your contact information and review your booking</p>
-                                
-                                <!-- Test Data Button for Development -->
-                                <div class="mt-4">
-                                    <button wire:click="fillTestData" 
-                                            type="button"
-                                            class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-200">
-                                        📝 Fill Test Data (For Testing)
-                                    </button>
-                                </div>
                             </div>
 
                             <div class="max-w-4xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -401,15 +392,7 @@
                                     </svg>
                                 </button>
                             @else
-                                <div class="flex items-center space-x-4">
-                                    <!-- Test Button (for debugging) -->
-                                    <button wire:click="testBookingButton" 
-                                            type="button"
-                                            class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg font-medium transition-colors duration-200">
-                                        🧪 Test Button
-                                    </button>
-                                    
-                                    <!-- Main Confirm Button -->
+                                <!-- Main Confirm Button -->
                                     <button wire:click="confirmBooking" 
                                             wire:loading.attr="disabled"
                                             wire:loading.class="opacity-50 cursor-not-allowed"
@@ -421,7 +404,6 @@
                                         <div wire:loading class="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin flex-shrink-0"></div>
                                         <span class="whitespace-nowrap font-bold">✅ Confirm Booking</span>
                                     </button>
-                                </div>
                             @endif
                         </div>
                     </div>

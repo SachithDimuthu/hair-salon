@@ -174,31 +174,6 @@ class BookService extends Component
         }
     }
 
-    public function fillTestData()
-    {
-        // Fill form with test data for quick testing
-        $this->firstName = 'John';
-        $this->lastName = 'Doe';
-        $this->email = 'john.doe@example.com';
-        $this->phone = '0771234567';
-        $this->specialRequests = 'Test booking request';
-        
-        // Select first service if available
-        if (!empty($this->services) && isset($this->services[0]['_id'])) {
-            $this->selectedServiceId = $this->services[0]['_id'];
-            $this->selectService($this->services[0]['_id']);
-        }
-        
-        // Set today's date and first available time
-        $this->bookingDate = now()->format('Y-m-d');
-        if (!empty($this->availableTimeSlots)) {
-            $this->bookingTime = $this->availableTimeSlots[0];
-        }
-        
-        $this->message = 'Test data filled successfully!';
-        $this->messageType = 'success';
-    }
-
     public function confirmBooking()
     {
         // Debug: Log that method was called
@@ -267,13 +242,6 @@ class BookService extends Component
                 'title' => 'Booking Error'
             ]);
         }
-    }
-
-    public function testBookingButton()
-    {
-        Log::info('Test booking button clicked - functionality is working!');
-        $this->message = 'Button is working correctly! Please fill in all fields to proceed with booking.';
-        $this->messageType = 'success';
     }
 
     public function startNewBooking()
