@@ -60,7 +60,26 @@ class Booking extends Model
 
     public function getBookingDateTimeAttribute(): Carbon
     {
-        return Carbon::parse($this->booking_date . ' ' . $this->booking_time);
+        try {
+            // Handle potential data format issues
+            $bookingDate = $this->booking_date;
+            $bookingTime = $this->booking_time;
+            
+            // Clean the date - ensure it's just the date part
+            if (strlen($bookingDate) > 10) {
+                $bookingDate = substr($bookingDate, 0, 10);
+            }
+            
+            // Clean the time - ensure it's just the time part  
+            if (strlen($bookingTime) > 8) {
+                $bookingTime = substr($bookingTime, -8);
+            }
+            
+            return Carbon::parse($bookingDate . ' ' . $bookingTime);
+        } catch (\Exception $e) {
+            // Fallback to created_at if date parsing fails
+            return Carbon::parse($this->created_at);
+        }
     }
 
     public function getStatusColorAttribute(): string

@@ -18,6 +18,48 @@
         </div>
     </div>
 
+    <!-- Charts Section -->
+    <div class="grid grid-cols-1 xl:grid-cols-2 gap-6 mb-6">
+        <!-- Booking Trends Chart -->
+        <x-ui.card>
+            <div class="flex items-center justify-between mb-4">
+                <h2 class="text-xl font-semibold text-gray-900">Booking Trends (Last 6 Months)</h2>
+                <div class="w-3 h-3 bg-rose-500 rounded-full"></div>
+            </div>
+            <div class="h-64">
+                <canvas id="bookingTrendsChart"></canvas>
+            </div>
+        </x-ui.card>
+
+        <!-- Status Distribution Chart -->
+        <x-ui.card>
+            <div class="flex items-center justify-between mb-4">
+                <h2 class="text-xl font-semibold text-gray-900">Booking Status Distribution</h2>
+                <div class="flex space-x-2">
+                    <div class="w-3 h-3 bg-green-500 rounded-full"></div>
+                    <div class="w-3 h-3 bg-yellow-500 rounded-full"></div>
+                    <div class="w-3 h-3 bg-blue-500 rounded-full"></div>
+                </div>
+            </div>
+            <div class="h-64">
+                <canvas id="statusDistributionChart"></canvas>
+            </div>
+        </x-ui.card>
+    </div>
+
+    <!-- Popular Services Chart -->
+    <div class="mb-6">
+        <x-ui.card>
+            <div class="flex items-center justify-between mb-4">
+                <h2 class="text-xl font-semibold text-gray-900">Most Popular Services</h2>
+                <span class="text-sm text-gray-500">Based on booking frequency</span>
+            </div>
+            <div class="h-80">
+                <canvas id="popularServicesChart"></canvas>
+            </div>
+        </x-ui.card>
+    </div>
+
     <!-- Stats Grid -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <!-- Total Bookings -->
@@ -374,4 +416,166 @@
         </div>
     </x-ui.card>
 </div>
+
+<!-- Chart.js CDN -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+// Salon theme colors
+const salonColors = {
+    rose: '#f43f5e',
+    pink: '#ec4899',
+    lightRose: '#fda4af',
+    lightPink: '#f9a8d4',
+    green: '#10b981',
+    yellow: '#f59e0b',
+    blue: '#3b82f6',
+    purple: '#8b5cf6'
+};
+
+// Booking Trends Chart (Line Chart)
+const trendsCtx = document.getElementById('bookingTrendsChart').getContext('2d');
+const bookingTrendsData = @json($bookingTrends);
+const trendsLabels = bookingTrendsData.map(item => `${item.year}-${item.month.padStart(2, '0')}`);
+const trendsValues = bookingTrendsData.map(item => item.count);
+
+const bookingTrendsChart = new Chart(trendsCtx, {
+    type: 'line',
+    data: {
+        labels: trendsLabels,
+        datasets: [{
+            label: 'Bookings',
+            data: trendsValues,
+            borderColor: salonColors.rose,
+            backgroundColor: salonColors.lightRose + '20',
+            borderWidth: 3,
+            fill: true,
+            tension: 0.4,
+            pointBackgroundColor: salonColors.rose,
+            pointBorderColor: '#fff',
+            pointBorderWidth: 2,
+            pointRadius: 6
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: {
+                display: false
+            }
+        },
+        scales: {
+            y: {
+                beginAtZero: true,
+                grid: {
+                    color: '#f1f5f9'
+                },
+                ticks: {
+                    color: '#64748b'
+                }
+            },
+            x: {
+                grid: {
+                    display: false
+                },
+                ticks: {
+                    color: '#64748b'
+                }
+            }
+        }
+    }
+});
+
+// Status Distribution Chart (Doughnut Chart)
+const statusCtx = document.getElementById('statusDistributionChart').getContext('2d');
+const statusData = @json($bookingStatusDistribution);
+const statusDistributionChart = new Chart(statusCtx, {
+    type: 'doughnut',
+    data: {
+        labels: Object.keys(statusData),
+        datasets: [{
+            data: Object.values(statusData),
+            backgroundColor: [
+                salonColors.green,
+                salonColors.yellow,
+                salonColors.blue,
+                salonColors.purple
+            ],
+            borderWidth: 0,
+            hoverOffset: 4
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: {
+                position: 'bottom',
+                labels: {
+                    padding: 20,
+                    usePointStyle: true,
+                    color: '#374151'
+                }
+            }
+        }
+    }
+});
+
+// Popular Services Chart (Horizontal Bar Chart)
+const servicesCtx = document.getElementById('popularServicesChart').getContext('2d');
+const servicesData = @json($popularServices);
+const servicesLabels = servicesData.map(item => item.service_name);
+const servicesValues = servicesData.map(item => item.booking_count);
+
+const popularServicesChart = new Chart(servicesCtx, {
+    type: 'bar',
+    data: {
+        labels: servicesLabels,
+        datasets: [{
+            label: 'Bookings',
+            data: servicesValues,
+            backgroundColor: [
+                salonColors.rose,
+                salonColors.pink,
+                salonColors.lightRose,
+                salonColors.lightPink,
+                salonColors.purple
+            ],
+            borderRadius: 8,
+            borderSkipped: false
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        indexAxis: 'y',
+        plugins: {
+            legend: {
+                display: false
+            }
+        },
+        scales: {
+            x: {
+                beginAtZero: true,
+                grid: {
+                    color: '#f1f5f9'
+                },
+                ticks: {
+                    color: '#64748b'
+                }
+            },
+            y: {
+                grid: {
+                    display: false
+                },
+                ticks: {
+                    color: '#64748b',
+                    maxTicksLimit: 5
+                }
+            }
+        }
+    }
+});
+</script>
 @endsection

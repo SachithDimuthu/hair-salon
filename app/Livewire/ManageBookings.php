@@ -168,10 +168,31 @@ class ManageBookings extends Component
             $booking->ServicePrice = $booking->service_price;
             $booking->Status = $booking->status;
             
-            // Format dates
-            $bookingDateTime = Carbon::parse($booking->booking_date . ' ' . $booking->booking_time);
-            $booking->FormattedBookedAt = $bookingDateTime->format('M j, Y g:i A');
-            $booking->RelativeBookedAt = $bookingDateTime->diffForHumans();
+            // Safe date parsing with error handling
+            try {
+                // Handle potential data format issues
+                $bookingDate = $booking->booking_date;
+                $bookingTime = $booking->booking_time;
+                
+                // Clean the date - ensure it's just the date part
+                if (strlen($bookingDate) > 10) {
+                    $bookingDate = substr($bookingDate, 0, 10);
+                }
+                
+                // Clean the time - ensure it's just the time part  
+                if (strlen($bookingTime) > 8) {
+                    $bookingTime = substr($bookingTime, -8);
+                }
+                
+                $bookingDateTime = Carbon::parse($bookingDate . ' ' . $bookingTime);
+                $booking->FormattedBookedAt = $bookingDateTime->format('M j, Y g:i A');
+                $booking->RelativeBookedAt = $bookingDateTime->diffForHumans();
+            } catch (\Exception $e) {
+                // Fallback if date parsing fails
+                $booking->FormattedBookedAt = 'Invalid date';
+                $booking->RelativeBookedAt = 'Unknown';
+            }
+            
             $booking->BookedAt = $booking->created_at; // For compatibility
             
             return $booking;
