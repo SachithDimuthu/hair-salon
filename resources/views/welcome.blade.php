@@ -19,129 +19,181 @@
     
 
 
-    <!-- Enhanced Navigation -->
-    <nav class="bg-white/95 backdrop-blur-md shadow-lg border-b border-gray-100 sticky top-0 z-50">
+    <!-- Professional Salon Navigation -->
+    <nav class="bg-white/98 backdrop-blur-lg shadow-xl border-b border-rose-100/50 sticky top-0 z-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center h-20">
-                <!-- Logo Section -->
-                <div class="flex items-center space-x-3 w-1/3">
-                    <a href="{{ route('home') }}">
-                        <img src="{{ asset('images/Logo.jpg') }}" alt="Luxe Hair Studio Logo" class="h-10 w-auto">
-                    </a>
-                    <a href="{{ route('home') }}" class="text-2xl font-bold text-gray-900 font-serif tracking-tight hover:text-rose-600 transition-colors duration-200">
-                        Luxe Hair Studio
-                    </a>
+            <div class="flex items-center justify-between h-24">
+                <!-- Elegant Logo Section -->
+                <div class="flex items-center space-x-4 group">
+                    <div class="relative">
+                        <a href="{{ route('home') }}" class="block">
+                            <img src="{{ asset('images/Logo.jpg') }}" alt="Luxe Hair Studio Logo" 
+                                 class="h-12 w-auto rounded-lg shadow-md group-hover:shadow-lg transition-all duration-300">
+                        </a>
+                        <div class="absolute -inset-1 bg-gradient-to-r from-rose-500 to-pink-500 rounded-lg blur opacity-20 group-hover:opacity-40 transition duration-300"></div>
+                    </div>
+                    <div class="hidden sm:block">
+                        <a href="{{ route('home') }}" class="block">
+                            <h1 class="text-2xl font-bold text-black font-serif tracking-wide">
+                                Luxe Hair Studio
+                            </h1>
+                            <p class="text-xs text-black font-medium tracking-widest uppercase">Professional Hair Care</p>
+                        </a>
+                    </div>
                 </div>
                 
-                <!-- Desktop Navigation (Centered) -->
-                <div class="hidden md:flex items-center justify-center space-x-8 w-1/3">
+                <!-- Professional Navigation Menu -->
+                <div class="hidden md:flex items-center space-x-1">
                     <a href="{{ route('home') }}" 
-                       class="text-base font-semibold text-gray-600 hover:text-rose-600 transition-colors duration-200 px-4 py-2 rounded-lg hover:bg-rose-50 {{ request()->routeIs('home') ? 'text-rose-600 bg-rose-50' : '' }}">
-                        Home
+                       class="relative px-6 py-3 text-sm font-medium text-gray-700 hover:text-rose-600 transition-all duration-300 group {{ request()->routeIs('home') ? 'text-rose-600' : '' }}">
+                        <span class="relative z-10 tracking-wide">HOME</span>
+                        <div class="absolute inset-0 bg-gradient-to-r from-rose-50 to-pink-50 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 {{ request()->routeIs('home') ? 'opacity-100' : '' }}"></div>
+                        @if(request()->routeIs('home'))
+                            <div class="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-8 h-0.5 bg-gradient-to-r from-rose-500 to-pink-500 rounded-full"></div>
+                        @endif
                     </a>
                     <a href="{{ route('services') }}" 
-                       class="text-base font-semibold text-gray-600 hover:text-rose-600 transition-colors duration-200 px-4 py-2 rounded-lg hover:bg-rose-50 {{ request()->routeIs('services') ? 'text-rose-600 bg-rose-50' : '' }}">
-                        Services
+                       class="relative px-6 py-3 text-sm font-medium text-gray-700 hover:text-rose-600 transition-all duration-300 group {{ request()->routeIs('services') ? 'text-rose-600' : '' }}">
+                        <span class="relative z-10 tracking-wide">SERVICES</span>
+                        <div class="absolute inset-0 bg-gradient-to-r from-rose-50 to-pink-50 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 {{ request()->routeIs('services') ? 'opacity-100' : '' }}"></div>
+                        @if(request()->routeIs('services'))
+                            <div class="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-8 h-0.5 bg-gradient-to-r from-rose-500 to-pink-500 rounded-full"></div>
+                        @endif
                     </a>
                     <a href="{{ route('about') }}" 
-                       class="text-base font-semibold text-gray-600 hover:text-rose-600 transition-colors duration-200 px-4 py-2 rounded-lg hover:bg-rose-50 {{ request()->routeIs('about') ? 'text-rose-600 bg-rose-50' : '' }}">
-                        About
+                       class="relative px-6 py-3 text-sm font-medium text-gray-700 hover:text-rose-600 transition-all duration-300 group {{ request()->routeIs('about') ? 'text-rose-600' : '' }}">
+                        <span class="relative z-10 tracking-wide">ABOUT</span>
+                        <div class="absolute inset-0 bg-gradient-to-r from-rose-50 to-pink-50 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 {{ request()->routeIs('about') ? 'opacity-100' : '' }}"></div>
+                        @if(request()->routeIs('about'))
+                            <div class="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-8 h-0.5 bg-gradient-to-r from-rose-500 to-pink-500 rounded-full"></div>
+                        @endif
                     </a>
                     <a href="{{ route('contact') }}" 
-                       class="text-base font-semibold text-gray-600 hover:text-rose-600 transition-colors duration-200 px-4 py-2 rounded-lg hover:bg-rose-50 {{ request()->routeIs('contact') ? 'text-rose-600 bg-rose-50' : '' }}">
-                        Contact
+                       class="relative px-6 py-3 text-sm font-medium text-gray-700 hover:text-rose-600 transition-all duration-300 group {{ request()->routeIs('contact') ? 'text-rose-600' : '' }}">
+                        <span class="relative z-10 tracking-wide">CONTACT</span>
+                        <div class="absolute inset-0 bg-gradient-to-r from-rose-50 to-pink-50 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 {{ request()->routeIs('contact') ? 'opacity-100' : '' }}"></div>
+                        @if(request()->routeIs('contact'))
+                            <div class="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-8 h-0.5 bg-gradient-to-r from-rose-500 to-pink-500 rounded-full"></div>
+                        @endif
                     </a>
-                    <a href="{{ route('book-service') }}" 
-                       class="text-base font-semibold text-gray-600 hover:text-rose-600 transition-colors duration-200 px-4 py-2 rounded-lg hover:bg-rose-50">
-                        Book Service
-                    </a>
+                    
+                    <!-- Premium Book Service Button -->
+                    <div class="ml-6">
+                        <a href="{{ route('book-service') }}" 
+                           class="relative inline-flex items-center px-8 py-3 bg-gradient-to-r from-rose-500 via-pink-500 to-rose-600 text-white font-semibold text-sm tracking-wide rounded-full shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 group overflow-hidden">
+                            <div class="absolute inset-0 bg-gradient-to-r from-rose-600 via-pink-600 to-rose-700 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                            <span class="relative z-10 flex items-center">
+                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                                </svg>
+                                BOOK APPOINTMENT
+                            </span>
+                        </a>
+                    </div>
                 </div>
                 
-                <!-- Right Section (Auth/Login) -->
-                <div class="flex items-center justify-end space-x-4 w-1/3">
-                    
+                <!-- Elegant Right Section -->
+                <div class="flex items-center justify-end space-x-6">
                     @auth
-                        <!-- User Dropdown -->
+                        <!-- Elegant User Dropdown -->
                         <div class="relative" x-data="{ open: false }">
                             <button @click="open = !open" 
-                                    class="flex items-center space-x-2 text-gray-600 hover:text-rose-600 transition-colors duration-200 px-4 py-2 rounded-lg hover:bg-rose-50 focus:outline-none">
-                                <div class="w-8 h-8 bg-gradient-to-br from-rose-500 to-pink-600 rounded-full flex items-center justify-center shadow-sm">
+                                    class="flex items-center space-x-3 px-4 py-2 bg-gradient-to-r from-gray-50 to-rose-50 hover:from-rose-50 hover:to-pink-50 rounded-full border border-rose-100 shadow-sm hover:shadow-md transition-all duration-300 group focus:outline-none focus:ring-2 focus:ring-rose-500 focus:ring-opacity-50">
+                                <div class="w-8 h-8 bg-gradient-to-br from-rose-500 to-pink-600 rounded-full flex items-center justify-center shadow-sm group-hover:shadow-md transition-all duration-300">
                                     <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
                                     </svg>
                                 </div>
-                                <span class="text-base font-semibold">{{ Auth::user()->name }}</span>
-                                <svg class="w-4 h-4 transition-transform duration-200" :class="{ 'rotate-180': open }" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <div class="hidden sm:block text-left">
+                                    <p class="text-sm font-semibold text-gray-900">{{ Auth::user()->name }}</p>
+                                    <p class="text-xs text-gray-500 capitalize">{{ Auth::user()->role ?? 'Member' }}</p>
+                                </div>
+                                <svg class="w-4 h-4 text-gray-500 transition-transform duration-300" :class="{ 'rotate-180': open }" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
                                 </svg>
                             </button>
 
-                            <!-- Dropdown Menu -->
+                            <!-- Elegant Dropdown Menu -->
                             <div x-show="open" 
                                  @click.away="open = false"
-                                 x-transition:enter="transition ease-out duration-200"
-                                 x-transition:enter-start="opacity-0 transform scale-95"
-                                 x-transition:enter-end="opacity-100 transform scale-100"
-                                 x-transition:leave="transition ease-in duration-150"
-                                 x-transition:leave-start="opacity-100 transform scale-100"
-                                 x-transition:leave-end="opacity-0 transform scale-95"
-                                 class="absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-lg border border-gray-200 py-2 z-50">
+                                 x-transition:enter="transition ease-out duration-300"
+                                 x-transition:enter-start="opacity-0 transform scale-95 translate-y-2"
+                                 x-transition:enter-end="opacity-100 transform scale-100 translate-y-0"
+                                 x-transition:leave="transition ease-in duration-200"
+                                 x-transition:leave-start="opacity-100 transform scale-100 translate-y-0"
+                                 x-transition:leave-end="opacity-0 transform scale-95 translate-y-2"
+                                 class="absolute right-0 mt-4 w-64 bg-white rounded-2xl shadow-2xl border border-rose-100 py-3 z-50 backdrop-blur-sm">
                                 
-                                <div class="px-4 py-3 border-b border-gray-100">
-                                    <p class="text-sm text-gray-500">Signed in as</p>
-                                    <p class="text-sm font-semibold text-gray-900 truncate">{{ Auth::user()->email }}</p>
+                                <div class="px-6 py-4 border-b border-gray-100">
+                                    <div class="flex items-center space-x-3">
+                                        <div class="w-12 h-12 bg-gradient-to-br from-rose-500 to-pink-600 rounded-full flex items-center justify-center">
+                                            <span class="text-white font-bold text-lg">{{ substr(Auth::user()->name, 0, 1) }}</span>
+                                        </div>
+                                        <div>
+                                            <p class="font-semibold text-gray-900">{{ Auth::user()->name }}</p>
+                                            <p class="text-sm text-gray-500 truncate">{{ Auth::user()->email }}</p>
+                                        </div>
+                                    </div>
                                 </div>
 
-                                @if(Auth::user()->isAdmin())
-                                    <a href="{{ route('admin.dashboard') }}" 
-                                       class="flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-rose-50 hover:text-rose-600 transition-colors duration-200">
-                                        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2H9a2 2 0 01-2-2z"/>
-                                        </svg>
-                                        Admin Dashboard
-                                    </a>
-                                @elseif(Auth::user()->isCustomer())
-                                    <a href="{{ route('customer.dashboard') }}" 
-                                       class="flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-rose-50 hover:text-rose-600 transition-colors duration-200">
-                                        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
-                                        </svg>
-                                        My Dashboard
-                                    </a>
-                                @endif
+                                <div class="py-2">
+                                    @if(Auth::user()->isAdmin())
+                                        <a href="{{ route('admin.dashboard') }}" 
+                                           class="flex items-center px-6 py-3 text-sm text-gray-700 hover:bg-gradient-to-r hover:from-rose-50 hover:to-pink-50 hover:text-rose-600 transition-all duration-200">
+                                            <svg class="w-5 h-5 mr-3 text-rose-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2H9a2 2 0 01-2-2z"/>
+                                            </svg>
+                                            <span class="font-medium">Admin Dashboard</span>
+                                        </a>
+                                    @elseif(Auth::user()->isCustomer())
+                                        <a href="{{ route('customer.dashboard') }}" 
+                                           class="flex items-center px-6 py-3 text-sm text-gray-700 hover:bg-gradient-to-r hover:from-rose-50 hover:to-pink-50 hover:text-rose-600 transition-all duration-200">
+                                            <svg class="w-5 h-5 mr-3 text-rose-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                                            </svg>
+                                            <span class="font-medium">My Dashboard</span>
+                                        </a>
+                                    @endif
 
-                                <a href="{{ url('/user/profile') }}" 
-                                   class="flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-rose-50 hover:text-rose-600 transition-colors duration-200">
-                                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
-                                    </svg>
-                                    Profile
-                                </a>
-
-                                <form method="POST" action="{{ route('logout') }}" class="block">
-                                    @csrf
-                                    <button type="submit" 
-                                            class="w-full flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-red-50 hover:text-red-600 transition-colors duration-200 text-left">
-                                        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
+                                    <a href="{{ url('/user/profile') }}" 
+                                       class="flex items-center px-6 py-3 text-sm text-gray-700 hover:bg-gradient-to-r hover:from-rose-50 hover:to-pink-50 hover:text-rose-600 transition-all duration-200">
+                                        <svg class="w-5 h-5 mr-3 text-rose-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
                                         </svg>
-                                        Logout
-                                    </button>
-                                </form>
+                                        <span class="font-medium">Profile Settings</span>
+                                    </a>
+                                </div>
+
+                                <div class="border-t border-gray-100 pt-2">
+                                    <form method="POST" action="{{ route('logout') }}" class="block">
+                                        @csrf
+                                        <button type="submit" 
+                                                class="w-full flex items-center px-6 py-3 text-sm text-gray-700 hover:bg-gradient-to-r hover:from-red-50 hover:to-rose-50 hover:text-red-600 transition-all duration-200 text-left">
+                                            <svg class="w-5 h-5 mr-3 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
+                                            </svg>
+                                            <span class="font-medium">Sign Out</span>
+                                        </button>
+                                    </form>
+                                </div>
                             </div>
                         </div>
                     @else
+                        <!-- Elegant Login Button -->
                         <a href="{{ route('login') }}" 
-                           class="text-base font-semibold text-gray-600 hover:text-rose-600 transition-colors duration-200 px-4 py-2 rounded-lg hover:bg-rose-50">
-                            Login
+                           class="inline-flex items-center px-6 py-2.5 bg-white border-2 border-rose-200 text-rose-600 font-semibold text-sm tracking-wide rounded-full hover:bg-gradient-to-r hover:from-rose-50 hover:to-pink-50 hover:border-rose-300 transition-all duration-300 shadow-sm hover:shadow-md">
+                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"/>
+                            </svg>
+                            CLIENT LOGIN
                         </a>
                     @endauth
                     
-                    <!-- Mobile menu button -->
-                    <div class="md:hidden ml-4">
+                    <!-- Elegant Mobile Menu Button -->
+                    <div class="md:hidden">
                         <button x-data x-on:click="$refs.mobileMenu.classList.toggle('hidden')" 
-                                class="text-gray-600 hover:text-gray-900 focus:outline-none focus:text-gray-900 transition-colors duration-200 p-2 rounded-lg hover:bg-gray-100">
-                            <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
+                                class="inline-flex items-center justify-center p-3 rounded-full text-gray-600 hover:text-rose-600 hover:bg-gradient-to-r hover:from-rose-50 hover:to-pink-50 focus:outline-none focus:ring-2 focus:ring-rose-500 focus:ring-opacity-50 transition-all duration-300 border border-gray-200 hover:border-rose-200">
+                            <svg class="h-5 w-5" stroke="currentColor" fill="none" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
                             </svg>
                         </button>
