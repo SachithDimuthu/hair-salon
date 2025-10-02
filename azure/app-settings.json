@@ -1,0 +1,227 @@
+[
+  {
+    "name": "APP_NAME",
+    "value": "Luxe Hair Studio",
+    "slotSetting": false
+  },
+  {
+    "name": "APP_ENV",
+    "value": "production",
+    "slotSetting": false
+  },
+  {
+    "name": "APP_DEBUG",
+    "value": "false",
+    "slotSetting": false
+  },
+  {
+    "name": "APP_URL",
+    "value": "https://your-app-name.azurewebsites.net",
+    "slotSetting": false
+  },
+  {
+    "name": "APP_KEY",
+    "value": "base64:GENERATE_NEW_KEY_FOR_PRODUCTION",
+    "slotSetting": false
+  },
+  {
+    "name": "LOG_CHANNEL",
+    "value": "single",
+    "slotSetting": false
+  },
+  {
+    "name": "LOG_LEVEL",
+    "value": "info",
+    "slotSetting": false
+  },
+  {
+    "name": "DB_CONNECTION",
+    "value": "mysql",
+    "slotSetting": false
+  },
+  {
+    "name": "DB_HOST",
+    "value": "your-mysql-server.mysql.database.azure.com",
+    "slotSetting": false
+  },
+  {
+    "name": "DB_PORT",
+    "value": "3306",
+    "slotSetting": false
+  },
+  {
+    "name": "DB_DATABASE",
+    "value": "luxe_hair_studio",
+    "slotSetting": false
+  },
+  {
+    "name": "DB_USERNAME",
+    "value": "luxeadmin@your-mysql-server",
+    "slotSetting": false
+  },
+  {
+    "name": "DB_PASSWORD",
+    "value": "YourSecurePassword123!",
+    "slotSetting": true
+  },
+  {
+    "name": "DB_MONGO_CONNECTION",
+    "value": "mongodb",
+    "slotSetting": false
+  },
+  {
+    "name": "DB_MONGO_HOST",
+    "value": "your-cosmosdb-account.mongo.cosmos.azure.com",
+    "slotSetting": false
+  },
+  {
+    "name": "DB_MONGO_PORT",
+    "value": "10255",
+    "slotSetting": false
+  },
+  {
+    "name": "DB_MONGO_DATABASE",
+    "value": "luxe_hair_studio",
+    "slotSetting": false
+  },
+  {
+    "name": "DB_MONGO_USERNAME",
+    "value": "your-cosmosdb-account",
+    "slotSetting": false
+  },
+  {
+    "name": "DB_MONGO_PASSWORD",
+    "value": "your_cosmos_primary_key",
+    "slotSetting": true
+  },
+  {
+    "name": "CACHE_STORE",
+    "value": "redis",
+    "slotSetting": false
+  },
+  {
+    "name": "SESSION_DRIVER",
+    "value": "redis",
+    "slotSetting": false
+  },
+  {
+    "name": "SESSION_LIFETIME",
+    "value": "120",
+    "slotSetting": false
+  },
+  {
+    "name": "REDIS_CLIENT",
+    "value": "phpredis",
+    "slotSetting": false
+  },
+  {
+    "name": "REDIS_HOST",
+    "value": "your-redis-cache.redis.cache.windows.net",
+    "slotSetting": false
+  },
+  {
+    "name": "REDIS_PORT",
+    "value": "6380",
+    "slotSetting": false
+  },
+  {
+    "name": "REDIS_PASSWORD",
+    "value": "your_redis_primary_key",
+    "slotSetting": true
+  },
+  {
+    "name": "FILESYSTEM_DISK",
+    "value": "azure",
+    "slotSetting": false
+  },
+  {
+    "name": "AZURE_STORAGE_ACCOUNT_NAME",
+    "value": "luxehairstorage",
+    "slotSetting": false
+  },
+  {
+    "name": "AZURE_STORAGE_ACCOUNT_KEY",
+    "value": "your_storage_account_key",
+    "slotSetting": true
+  },
+  {
+    "name": "AZURE_STORAGE_CONTAINER",
+    "value": "salon-uploads",
+    "slotSetting": false
+  },
+  {
+    "name": "MAIL_MAILER",
+    "value": "smtp",
+    "slotSetting": false
+  },
+  {
+    "name": "MAIL_HOST",
+    "value": "smtp.sendgrid.net",
+    "slotSetting": false
+  },
+  {
+    "name": "MAIL_PORT",
+    "value": "587",
+    "slotSetting": false
+  },
+  {
+    "name": "MAIL_USERNAME",
+    "value": "apikey",
+    "slotSetting": false
+  },
+  {
+    "name": "MAIL_PASSWORD",
+    "value": "your_sendgrid_api_key",
+    "slotSetting": true
+  },
+  {
+    "name": "MAIL_ENCRYPTION",
+    "value": "tls",
+    "slotSetting": false
+  },
+  {
+    "name": "MAIL_FROM_ADDRESS",
+    "value": "noreply@luxehairstudio.com",
+    "slotSetting": false
+  },
+  {
+    "name": "MAIL_FROM_NAME",
+    "value": "Luxe Hair Studio",
+    "slotSetting": false
+  },
+  {
+    "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
+    "value": "your_instrumentation_key",
+    "slotSetting": true
+  },
+  {
+    "name": "VITE_APP_NAME",
+    "value": "Luxe Hair Studio",
+    "slotSetting": false
+  },
+  {
+    "name": "APP_FORCE_HTTPS",
+    "value": "true",
+    "slotSetting": false
+  },
+  {
+    "name": "SESSION_SECURE_COOKIE",
+    "value": "true",
+    "slotSetting": false
+  },
+  {
+    "name": "SESSION_SAME_SITE",
+    "value": "lax",
+    "slotSetting": false
+  },
+  {
+    "name": "QUEUE_CONNECTION",
+    "value": "sync",
+    "slotSetting": false
+  },
+  {
+    "name": "BROADCAST_CONNECTION",
+    "value": "log",
+    "slotSetting": false
+  }
+]

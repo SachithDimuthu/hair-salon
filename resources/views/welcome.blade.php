@@ -60,7 +60,7 @@
                     
                     <!-- Search Component -->
                     <div class="hidden lg:block w-80">
-                        {{-- @livewire('global-search') --}}
+                        @livewire('global-search')
                     </div>
                     
                     @auth
@@ -163,7 +163,7 @@
                     
                     <!-- Mobile Search -->
                     <div class="px-4 py-3">
-                        {{-- @livewire('global-search') --}}
+                        @livewire('global-search')
                     </div>
                     
                     @auth

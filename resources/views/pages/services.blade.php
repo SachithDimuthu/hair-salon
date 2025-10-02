@@ -11,10 +11,15 @@
                 <h1 class="text-4xl md:text-5xl font-bold bg-gradient-to-r from-rose-600 to-pink-600 bg-clip-text text-transparent mb-4">
                     Our Services
                 </h1>
-                <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+                <p class="text-xl text-gray-600 max-w-3xl mx-auto mb-8">
                     Experience luxury hair care with our comprehensive range of professional services, 
                     tailored to enhance your natural beauty and style.
                 </p>
+                
+                <!-- Search Bar -->
+                <div class="max-w-md mx-auto">
+                    @livewire('global-search')
+                </div>
             </div>
 
             <!-- Services Grid -->
