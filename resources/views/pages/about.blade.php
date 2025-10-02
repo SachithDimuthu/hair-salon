@@ -39,15 +39,13 @@
                     </div>
                 </div>
                 <div class="relative">
-                    <div class="w-full h-96 bg-gradient-to-br from-rose-200 via-pink-200 to-rose-300 rounded-2xl flex items-center justify-center">
-                        <div class="text-center">
-                            <div class="w-24 h-24 bg-gradient-to-br from-rose-500 to-pink-600 rounded-full mx-auto mb-4 flex items-center justify-center">
-                                <svg class="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
-                                </svg>
+                    <div class="w-full h-96 rounded-2xl overflow-hidden shadow-lg">
+                        <img src="{{ asset('images/Services/Hair_spa.jpg') }}" alt="Luxe Hair Studio - Hair Spa Services" class="w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent flex items-end justify-center">
+                            <div class="text-center pb-8">
+                                <p class="text-white font-semibold text-2xl mb-2">Luxe Hair Studio</p>
+                                <p class="text-white/90 text-lg">Established 2018</p>
                             </div>
-                            <p class="text-rose-700 font-semibold text-lg">Luxe Hair Studio</p>
-                            <p class="text-rose-600">Established 2018</p>
                         </div>
                     </div>
                 </div>
@@ -107,37 +105,54 @@
             </div>
 
             <!-- Experience Section -->
-            <div class="grid lg:grid-cols-2 gap-12 items-center mb-20">
-                <div class="relative order-2 lg:order-1">
-                    <div class="w-full h-96 bg-gradient-to-br from-pink-200 via-rose-200 to-pink-300 rounded-2xl flex items-center justify-center">
+            <div class="mb-20">
+                <div class="max-w-4xl mx-auto">
+                    <div class="space-y-8">
+                        <!-- Section Header -->
                         <div class="text-center">
-                            <div class="w-24 h-24 bg-gradient-to-br from-rose-500 to-pink-600 rounded-full mx-auto mb-4 flex items-center justify-center">
-                                <svg class="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h1.586a1 1 0 01.707.293l2.414 2.414a1 1 0 00.707.293H15M9 10V9a3 3 0 113 3v1.5M9 10H6m3 0V9a3 3 0 013-3v1"/>
-                                </svg>
-                            </div>
-                            <p class="text-rose-700 font-semibold text-lg">Luxury Environment</p>
-                            <p class="text-rose-600">Elevated Experience</p>
+                            <h2 class="text-3xl font-bold text-gray-900 mb-6">The Luxe Experience</h2>
+                            <div class="w-16 h-1 bg-gradient-to-r from-rose-500 to-pink-600 rounded-full mx-auto mb-6"></div>
                         </div>
-                    </div>
-                </div>
-                <div class="order-1 lg:order-2">
-                    <h2 class="text-3xl font-bold text-gray-900 mb-6">The Luxe Experience</h2>
-                    <div class="space-y-4 text-gray-600">
-                        <p>
-                            From the moment you step through our doors, you'll experience the legendary warmth of Sri Lankan hospitality 
-                            combined with world-class luxury. Our salon reflects the perfect blend of contemporary elegance and 
-                            traditional Lankan charm that makes you feel truly welcomed.
-                        </p>
-                        <p>
-                            Every detail has been thoughtfully designed—from our premium international product lines and modern equipment 
-                            to our comfortable spaces inspired by Sri Lanka's natural beauty. We believe your beauty journey should reflect 
-                            both global standards and local cultural appreciation.
-                        </p>
-                        <p>
-                            Whether you're preparing for a special celebration, wedding, or simply treating yourself, our team brings together 
-                            international expertise with genuine Sri Lankan care to create an unforgettable experience.
-                        </p>
+                        
+                        <!-- Content Blocks -->
+                        <div class="space-y-6">
+                            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                                <h3 class="text-xl font-semibold text-gray-900 mb-3">Warm Sri Lankan Hospitality</h3>
+                                <p class="text-gray-600 leading-relaxed">
+                                    From the moment you step through our doors, you'll experience the legendary warmth of Sri Lankan hospitality 
+                                    combined with world-class luxury. Our salon reflects the perfect blend of contemporary elegance and 
+                                    traditional Lankan charm that makes you feel truly welcomed.
+                                </p>
+                            </div>
+                            
+                            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                                <h3 class="text-xl font-semibold text-gray-900 mb-3">Thoughtfully Designed Luxury</h3>
+                                <p class="text-gray-600 leading-relaxed">
+                                    Every detail has been thoughtfully designed—from our premium international product lines and modern equipment 
+                                    to our comfortable spaces inspired by Sri Lanka's natural beauty. We believe your beauty journey should reflect 
+                                    both global standards and local cultural appreciation.
+                                </p>
+                            </div>
+                            
+                            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                                <h3 class="text-xl font-semibold text-gray-900 mb-3">International Expertise, Local Care</h3>
+                                <p class="text-gray-600 leading-relaxed">
+                                    Whether you're preparing for a special celebration, wedding, or simply treating yourself, our team brings together 
+                                    international expertise with genuine Sri Lankan care to create an unforgettable experience.
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <!-- Call-to-Action -->
+                        <div class="text-center pt-4">
+                            <a href="{{ route('book-service') }}" 
+                               class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-rose-500 to-pink-600 text-white rounded-lg font-semibold hover:from-rose-600 hover:to-pink-700 transition-all duration-200 hover:scale-105 shadow-md">
+                                <span>Experience Luxury Today</span>
+                                <svg class="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+                                </svg>
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>

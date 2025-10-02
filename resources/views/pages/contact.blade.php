@@ -201,13 +201,13 @@
                                 </svg>
                             </div>
                             <h3 class="text-xl font-bold text-gray-900 mb-2">Interactive Map</h3>
-                            <p class="text-gray-600 mb-4">123 Beauty Lane, Luxury District</p>
+                            <p class="text-gray-600 mb-4">542 Peradeniya Rd, Kandy 20000</p>
                             <p class="text-sm text-gray-500">Map integration coming soon</p>
                         </div>
                     </div>
                     <div class="mt-6 text-center">
                         <p class="text-gray-600 mb-4">
-                            Convenient parking available. Located in the heart of the Luxury District with easy access to public transportation.
+                            Convenient parking available. Located on Peradeniya Road in Kandy with easy access to public transportation.
                         </p>
                         <a href="#" 
                            class="inline-flex items-center space-x-2 text-rose-600 hover:text-rose-700 font-semibold">
