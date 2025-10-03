@@ -1,10 +1,11 @@
-name: Deploy Luxe Hair Studio to Azure
+name: Deploy Luxe Hair Studio to Azure (DISABLED - Using main_luxe-hair-studio-app.yml Instead)
 
 on:
-  push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
+  # Disabled to prevent conflicts with main Azure deployment workflow
+  # push:
+  #   branches: [ main ]
+  # pull_request:
+  #   branches: [ main ]
   workflow_dispatch:
 
 env:

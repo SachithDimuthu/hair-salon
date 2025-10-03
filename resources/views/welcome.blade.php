@@ -315,9 +315,15 @@
             <!-- Featured Services Preview -->
             <div class="mt-20 max-w-6xl mx-auto">
                 <div class="text-center mb-12">
-                    <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4 font-serif">Our Featured Services</h2>
-                    <p class="text-lg text-gray-600 max-w-3xl mx-auto leading-relaxed">
-                        Experience luxury and expertise with our premium salon services designed to enhance your natural beauty
+                    <div class="inline-flex items-center bg-gradient-to-r from-rose-100/80 to-pink-100/80 backdrop-blur-sm border border-rose-200/50 rounded-full px-8 py-3 mb-6 shadow-lg">
+                        <svg class="w-6 h-6 text-rose-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/>
+                        </svg>
+                        <span class="bg-gradient-to-r from-rose-600 to-pink-600 bg-clip-text text-transparent font-bold text-sm tracking-widest uppercase">SIGNATURE SERVICES</span>
+                    </div>
+                    <h2 class="text-4xl md:text-5xl font-bold bg-gradient-to-r from-rose-600 to-pink-600 bg-clip-text text-transparent mb-6 font-serif tracking-tight">Our Featured Services</h2>
+                    <p class="text-lg text-rose-700/80 max-w-3xl mx-auto leading-relaxed font-medium">
+                        Experience the pinnacle of luxury and expertise with our premium salon services, meticulously crafted to enhance your natural beauty and elevate your confidence
                     </p>
                 </div>
                 

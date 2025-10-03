@@ -1,10 +1,12 @@
-name: Deploy Luxe Hair Studio
+name: Deploy Luxe Hair Studio (DISABLED - Using Azure Instead)
 
 on:
-  push:
-    branches: [ main, production ]
-  pull_request:
-    branches: [ main ]
+  # Disabled to prevent conflicts with Azure deployment
+  # push:
+  #   branches: [ main, production ]
+  # pull_request:
+  #   branches: [ main ]
+  workflow_dispatch:
 
 jobs:
   test:

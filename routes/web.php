@@ -128,13 +128,12 @@ Route::middleware([
                     $appointments = collect();
                 }
                 
-                // Temporarily use debug view
-                return view('appointments.debug')->with('appointments', $appointments);
+                return view('appointments.index')->with('appointments', $appointments);
                 
             } catch (\Exception $e) {
                 Log::error('Error fetching appointments: ' . $e->getMessage());
                 $appointments = collect();
-                return view('appointments.debug')->with('appointments', $appointments);
+                return view('appointments.index')->with('appointments', $appointments);
             }
         })->name('index');
         
