@@ -20,8 +20,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        // Force HTTPS in production
+        // Force HTTPS in production with proper proxy detection
         if (config('app.env') === 'production') {
+            // Trust Railway's proxy headers
+            $this->app['request']->server->set('HTTPS', 'on');
             URL::forceScheme('https');
         }
     }
