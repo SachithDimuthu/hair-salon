@@ -1,0 +1,44 @@
+# Alternative Railway Variables (if the $ syntax doesn't work)
+# Use these exact variable names that Railway provides
+
+APP_NAME=Luxe Hair Studio
+APP_ENV=production
+APP_KEY=base64:GluQIaHpPcpk8ikyE6nTihsvO1ySpv5AY1x55dETb38=
+APP_DEBUG=false
+APP_TIMEZONE=UTC
+APP_URL=https://hair-salon-production.up.railway.app
+DB_CONNECTION=mysql
+CACHE_DRIVER=file
+SESSION_DRIVER=file
+SESSION_LIFETIME=120
+SESSION_ENCRYPT=false
+SESSION_PATH=/
+SESSION_SAME_SITE=lax
+QUEUE_CONNECTION=sync
+FILESYSTEM_DISK=public
+SANCTUM_STATEFUL_DOMAINS=hair-salon-production.up.railway.app
+SESSION_DOMAIN=.railway.app
+LOG_CHANNEL=stack
+LOG_LEVEL=error
+OPTIMIZE_CLEAR_CACHE=true
+VIEW_COMPILED_PATH=/tmp/views
+DB_MONGO_DATABASE=luxe_hair_catalog
+
+# Copy these variable names exactly as Railway provides them:
+# From your MySQL service:
+# MYSQL_DATABASE=railway
+# MYSQL_ROOT_PASSWORD=XeORhOBRiRiYtcQbifCuQbZpLwVJnuKw
+# MYSQLHOST=<railway-domain>
+# MYSQLPORT=3306
+# MYSQLUSER=root
+# MYSQLPASSWORD=XeORhOBRiRiYtcQbifCuQbZpLwVJnuKw
+# MYSQLDATABASE=railway
+
+# From your MongoDB service:
+# MONGO_INITDB_ROOT_USERNAME=mongo
+# MONGO_INITDB_ROOT_PASSWORD=NHFMjojQXmtUGyxiCJxmeiwKGvAhVOBo
+# MONGOHOST=<railway-domain>
+# MONGOPORT=27017
+# MONGOUSER=mongo
+# MONGOPASSWORD=NHFMjojQXmtUGyxiCJxmeiwKGvAhVOBo
+# MONGO_URL=mongodb://mongo:NHFMjojQXmtUGyxiCJxmeiwKGvAhVOBo@<domain>:27017
