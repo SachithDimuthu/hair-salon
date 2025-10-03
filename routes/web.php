@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\DashboardController;
 
 /*
@@ -29,6 +30,12 @@ Route::get('/', function () {
 Route::get('/test-time-slots', function () {
     return view('test-time-slots');
 })->name('test-time-slots');
+
+// Test route for appointments debugging
+Route::get('/test-appointments', function () {
+    $appointments = collect(['test' => 'data']);
+    return view('appointments.index', compact('appointments'));
+})->name('test-appointments');
 
 // Test route for basic Livewire functionality  
 Route::get('/test-button', function () {
@@ -94,21 +101,7 @@ Route::middleware([
     // Customer dashboard routes
     Route::prefix('customer')->name('customer.')->middleware('role:customer')->group(function () {
         Route::get('/dashboard', function () {
-            $user = Auth::user();
-            
-            // Calculate customer statistics (using dummy data for now)
-            $stats = [
-                'total_appointments' => 0,
-                'upcoming_appointments' => 0,
-                'total_orders' => 0,
-                'total_spent' => 0.00,
-            ];
-            
-            // Create empty collections for appointments and orders
-            $upcomingAppointments = collect();
-            $recentOrders = collect();
-            
-            return view('dashboard.customer', compact('stats', 'upcomingAppointments', 'recentOrders'));
+            return view('dashboard.customer-livewire');
         })->name('dashboard');
     });
 
@@ -119,15 +112,46 @@ Route::middleware([
         })->name('create');
         
         Route::get('/my-appointments', function () {
-            return view('appointments.index');
+            $user = Auth::user();
+            
+            if (!$user) {
+                return redirect()->route('login');
+            }
+            
+            try {
+                $appointments = \App\Models\Booking::where('customer_id', $user->id)
+                    ->orderBy('booking_date', 'desc')
+                    ->get();
+                    
+                // Ensure $appointments is never null
+                if ($appointments === null) {
+                    $appointments = collect();
+                }
+                
+                // Temporarily use debug view
+                return view('appointments.debug')->with('appointments', $appointments);
+                
+            } catch (\Exception $e) {
+                Log::error('Error fetching appointments: ' . $e->getMessage());
+                $appointments = collect();
+                return view('appointments.debug')->with('appointments', $appointments);
+            }
         })->name('index');
         
         Route::get('/{appointment}', function ($appointment) {
-            return view('appointments.show', compact('appointment'));
+            $user = Auth::user();
+            $appointmentData = \App\Models\Booking::where('customer_id', $user->id)
+                ->where('id', $appointment)
+                ->firstOrFail();
+            return view('appointments.show', ['appointment' => $appointmentData]);
         })->name('show');
         
         Route::get('/{appointment}/edit', function ($appointment) {
-            return view('appointments.edit', compact('appointment'));
+            $user = Auth::user();
+            $appointmentData = \App\Models\Booking::where('customer_id', $user->id)
+                ->where('id', $appointment)
+                ->firstOrFail();
+            return view('appointments.edit', ['appointment' => $appointmentData]);
         })->name('edit');
     });
 

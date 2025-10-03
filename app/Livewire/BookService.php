@@ -284,6 +284,9 @@ class BookService extends Component
             
             Log::info('Booking created successfully', ['booking_id' => $booking->id]);
             
+            // Dispatch event to refresh customer dashboard
+            $this->dispatch('bookingCreated');
+            
             return $booking;
             
         } catch (\Exception $e) {
