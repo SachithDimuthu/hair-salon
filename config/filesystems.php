@@ -60,18 +60,6 @@ return [
             'report' => false,
         ],
 
-        'azure' => [
-            'driver' => 'azure',
-            'account' => env('AZURE_STORAGE_ACCOUNT_NAME'),
-            'key' => env('AZURE_STORAGE_ACCOUNT_KEY'),
-            'container' => env('AZURE_STORAGE_CONTAINER', 'salon-uploads'),
-            'url' => env('AZURE_STORAGE_URL'),
-            'prefix' => env('AZURE_STORAGE_PREFIX', ''),
-            'visibility' => 'public',
-            'throw' => false,
-            'report' => false,
-        ],
-
     ],
 
     /*
