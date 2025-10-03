@@ -5,41 +5,28 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Collection;
-use MongoDB\Laravel\Eloquent\Model;
+use Illuminate\Database\Eloquent\Model;
 
 class Service extends Model
 {
     use HasFactory, SoftDeletes;
 
-    // Store service records inside MongoDB
-    protected $connection = 'mongodb';
+    // Temporarily use MySQL instead of MongoDB
+    protected $connection = 'mysql';
+    
+    // Use the correct primary key from migration
+    protected $primaryKey = 'ServiceID';
 
     protected $fillable = [
-        'name',
-        'slug',
-        'category',
-        'description',
-        'base_price',
-        'image',
-        'durations',
-        'tags',
-        'active',
-        'staff_ids',
-        'addon_ids',
-        'visibility',
-        'rating',
-        'booking_constraints',
+        'ServiceName',
+        'Description', 
+        'Price',
+        'Visibility',
+        'ServicePhoto',
     ];
 
     protected $casts = [
-        'base_price' => 'float',
-        'active' => 'boolean',
-        'rating' => 'float',
-        'durations' => 'array',
-        'tags' => 'array',
-        'staff_ids' => 'array',
-        'addon_ids' => 'array',
-        'booking_constraints' => 'array',
+        'Visibility' => 'boolean',
         'deleted_at' => 'datetime',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
@@ -92,18 +79,10 @@ class Service extends Model
         return $total / count($this->durations);
     }
 
-    public function getBasePriceAttribute($value)
-    {
-        if ($value instanceof \MongoDB\BSON\Decimal128) {
-            return (float) $value->__toString();
-        }
-        return (float) $value;
-    }
-
-    // Relationship with bookings (SQL to MongoDB)
+    // Relationship with bookings
     public function bookings()
     {
-        return \App\Models\Booking::where('service_id', (string) $this->_id);
+        return $this->hasMany(\App\Models\Booking::class, 'service_id', 'ServiceID');
     }
 
     // Get booking count for this service
