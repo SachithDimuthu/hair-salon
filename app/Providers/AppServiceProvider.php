@@ -20,11 +20,15 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        // Force HTTPS in production with proper proxy detection
+        // Temporarily disable HTTPS forcing to prevent redirect loops on Railway
+        // Railway handles HTTPS at the proxy level
+        /*
         if (config('app.env') === 'production') {
-            // Trust Railway's proxy headers
-            $this->app['request']->server->set('HTTPS', 'on');
-            URL::forceScheme('https');
+            // Only force HTTPS if not already HTTPS to avoid redirect loops
+            if (!request()->isSecure() && !request()->header('X-Forwarded-Proto') === 'https') {
+                URL::forceScheme('https');
+            }
         }
+        */
     }
 }

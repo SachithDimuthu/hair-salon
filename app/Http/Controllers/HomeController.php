@@ -13,8 +13,8 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $featuredServices = Service::where('is_active', true)
-            ->orderBy('price', 'desc')
+        $featuredServices = Service::where('Visibility', true)
+            ->orderBy('Price', 'desc')
             ->take(6)
             ->get();
 
@@ -26,10 +26,8 @@ class HomeController extends Controller
      */
     public function services()
     {
-        $services = Service::with('category')
-            ->where('is_active', true)
-            ->orderBy('category_id')
-            ->orderBy('name')
+        $services = Service::where('Visibility', true)
+            ->orderBy('ServiceName')
             ->get();
 
         return view('public.services', compact('services'));

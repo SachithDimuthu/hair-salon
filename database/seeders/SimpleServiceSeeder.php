@@ -12,8 +12,8 @@ class SimpleServiceSeeder extends Seeder
      */
     public function run()
     {
-        // Clear existing services for a fresh start
-        Service::truncate();
+        // Clear existing services (use delete instead of truncate due to foreign keys)
+        Service::query()->delete();
 
         // Simple services that match the MySQL table structure
         $services = [

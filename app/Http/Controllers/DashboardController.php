@@ -50,7 +50,7 @@ class DashboardController extends Controller
             
             // Service Statistics
             'total_services' => Service::count(),
-            'active_services' => Service::where('visibility', true)->count(),
+            'active_services' => Service::where('Visibility', true)->count(),
             
             // Customer Statistics
             'unique_customers' => Booking::distinct('customer_email')->count(),

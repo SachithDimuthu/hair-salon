@@ -73,7 +73,7 @@ class ServiceController extends Controller
         $services = Cache::remember('services.public', 300, function () {
             return Service::active()
                 ->public()
-                ->orderBy('name')
+                ->orderBy('ServiceName')
                 ->get();
         });
 

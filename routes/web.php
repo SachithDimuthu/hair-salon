@@ -22,9 +22,7 @@ use App\Http\Controllers\DashboardController;
 */
 
 // Public web routes
-Route::get('/', function () {
-    return view('welcome');
-})->name('home');
+Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 // Test route for debugging time slots without cache issues
 Route::get('/test-time-slots', function () {
@@ -44,7 +42,7 @@ Route::get('/test-button', function () {
 
 // Public pages
 Route::get('/services', function () {
-    $services = \App\Models\Service::where('visibility', true)->orderBy('category')->get();
+    $services = \App\Models\Service::where('Visibility', true)->orderBy('ServiceName')->get();
     return view('pages.services', compact('services'));
 })->name('services');
 
@@ -54,10 +52,9 @@ Route::get('/services/{service}', function (\App\Models\Service $service) {
         abort(404);
     }
     
-    // Get related services from same category
-    $relatedServices = \App\Models\Service::where('visibility', true)
-        ->where('category', $service->category)
-        ->where('_id', '!=', $service->_id)
+    // Get related services from same category  
+    $relatedServices = \App\Models\Service::where('Visibility', true)
+        ->where('ServiceName', '!=', $service->ServiceName)
         ->limit(3)
         ->get();
     
