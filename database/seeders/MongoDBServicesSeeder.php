@@ -12,13 +12,22 @@ class MongoDBServicesSeeder extends Seeder
      */
     public function run(): void
     {
-        echo "\n===========================================\n";
+        echo "\n";
+        echo "===========================================\n";
         echo "🌱 STARTING MongoDB Services Seeder\n";
         echo "===========================================\n";
+        echo "Environment: " . app()->environment() . "\n";
         echo "Database: " . config('database.connections.mongodb.database') . "\n";
         echo "Host: " . config('database.connections.mongodb.host') . "\n";
         echo "Port: " . config('database.connections.mongodb.port') . "\n";
-        echo "Connection: " . config('database.connections.mongodb.dsn') . "\n";
+        echo "Username: " . (config('database.connections.mongodb.username') ? '***SET***' : 'NOT SET') . "\n";
+        echo "Password: " . (config('database.connections.mongodb.password') ? '***SET***' : 'NOT SET') . "\n";
+        
+        // Check if DSN is set (Railway uses DSN connection string)
+        $dsn = config('database.connections.mongodb.dsn');
+        if ($dsn) {
+            echo "DSN: " . (substr($dsn, 0, 20) . '...') . "\n";
+        }
         echo "-------------------------------------------\n";
         
         try {
