@@ -1,5 +1,5 @@
 # Nixpacks Configuration for Railway
-# This file tells Railway how to install PHP extensions
+# Force rebuild - Updated Oct 7, 2025
 
 [phases.setup]
 nixPkgs = ["php82", "php82Extensions.mongodb", "php82Extensions.pdo_mysql", "nodejs_18", "php82Packages.composer"]
@@ -11,7 +11,7 @@ cmds = ["npm ci", "composer install --optimize-autoloader --no-dev --ignore-plat
 cmds = ["npm run build"]
 
 [phases.deploy]
-cmds = ["bash .railway/deploy.sh"]
+cmds = ["chmod +x .railway/deploy.sh", "bash .railway/deploy.sh"]
 
 [start]
 cmd = "php artisan serve --host=0.0.0.0 --port=$PORT"
