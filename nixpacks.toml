@@ -11,5 +11,4 @@ cmds = ["npm ci", "composer install --optimize-autoloader --no-dev --ignore-plat
 [phases.build]  
 cmds = ["npm run build"]
 
-[start]
-cmd = "bash railway-start.sh"
+# Start command is in Procfile
