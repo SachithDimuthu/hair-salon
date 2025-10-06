@@ -28,9 +28,9 @@
                     @foreach($services as $service)
                         <a href="{{ route('service.show', $service) }}" 
                            class="group bg-white rounded-2xl shadow-lg p-8 border border-rose-100/50 hover:shadow-xl transition-all duration-300 hover:scale-105 block">
-                            @if($service->ServicePhoto)
+                            @if($service->image)
                                 <div class="w-full h-48 mb-6 rounded-xl overflow-hidden">
-                                    <img src="{{ asset($service->ServicePhoto) }}" alt="{{ $service->ServiceName }}" 
+                                    <img src="{{ asset($service->image) }}" alt="{{ $service->name }}" 
                                          class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300">
                                 </div>
                             @else
@@ -41,13 +41,13 @@
                                 </div>
                             @endif
                             
-                            <h3 class="text-2xl font-bold text-gray-900 mb-4 group-hover:text-rose-600 transition-colors">{{ $service->ServiceName }}</h3>
-                            <p class="text-gray-600 mb-4">{{ Str::limit($service->Description, 120) }}</p>
+                            <h3 class="text-2xl font-bold text-gray-900 mb-4 group-hover:text-rose-600 transition-colors">{{ $service->name }}</h3>
+                            <p class="text-gray-600 mb-4">{{ Str::limit($service->description, 120) }}</p>
                             
                             <div class="space-y-3">
                                 <div class="flex justify-between items-center">
                                     <span class="text-sm text-gray-600 font-medium">Price:</span>
-                                    <span class="text-lg font-bold text-rose-600">Rs.{{ number_format((float)$service->Price, 0) }}</span>
+                                    <span class="text-lg font-bold text-rose-600">Rs.{{ number_format((float)$service->price, 0) }}</span>
                                 </div>
                                 
                                 <div class="pt-2">

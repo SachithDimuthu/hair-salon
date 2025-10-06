@@ -13,6 +13,7 @@ class Deal extends Model
 
     protected $connection = 'mongodb';
     protected $collection = 'deals';
+    protected $primaryKey = '_id';
 
     protected $fillable = [
         'DealName',
@@ -36,12 +37,9 @@ class Deal extends Model
         'CurrentUses' => 'integer',
     ];
 
-    // MongoDB doesn't need primary key specification
-    // The _id field is automatically used
-
     public function service(): BelongsTo
     {
-        return $this->belongsTo(Service::class, 'ServiceID', 'id');
+        return $this->belongsTo(Service::class, 'service_id', '_id');
     }
 
     public function admins(): BelongsToMany

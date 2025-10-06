@@ -43,7 +43,7 @@
                     
                     <div class="text-center mt-auto space-y-4">
                         <div class="bg-gradient-to-r from-rose-50 to-pink-50 backdrop-blur-sm border border-rose-200/50 rounded-2xl px-6 py-3">
-                            <p class="text-rose-600 font-bold text-xl">Starting from Rs.{{ number_format((float)$service->base_price, 0) }}</p>
+                            <p class="text-rose-600 font-bold text-xl">Starting from Rs.{{ number_format((float)$service->price, 0) }}</p>
                         </div>
                         
                         <div class="group/btn inline-flex items-center bg-gradient-to-r from-rose-500 to-pink-500 hover:from-rose-600 hover:to-pink-600 text-white px-6 py-3 rounded-xl font-semibold transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105">

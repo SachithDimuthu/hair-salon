@@ -28,11 +28,11 @@ class HomePage extends Component
             ->limit(6)
             ->get();
 
-        // Get 9 most popular services (active and visible)
+        // Get 6 most popular services (active and visible)
         $this->popularServices = Service::where('active', true)
-            ->where('visibility', true)
-            ->orderBy('rating', 'desc')
-            ->limit(9)
+            ->where('visibility', 'public')
+            ->orderBy('price', 'desc')
+            ->limit(6)
             ->get();
     }
 

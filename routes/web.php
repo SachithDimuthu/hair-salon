@@ -42,19 +42,24 @@ Route::get('/test-button', function () {
 
 // Public pages
 Route::get('/services', function () {
-    $services = \App\Models\Service::where('Visibility', true)->orderBy('ServiceName')->get();
+    $services = \App\Models\Service::where('active', true)
+        ->where('visibility', 'public')
+        ->orderBy('name')
+        ->get();
     return view('pages.services', compact('services'));
 })->name('services');
 
 Route::get('/services/{service}', function (\App\Models\Service $service) {
     // Check if service is visible to public
-    if (!$service->visibility) {
+    if (!$service->active || $service->visibility !== 'public') {
         abort(404);
     }
     
     // Get related services from same category  
-    $relatedServices = \App\Models\Service::where('Visibility', true)
-        ->where('ServiceName', '!=', $service->ServiceName)
+    $relatedServices = \App\Models\Service::where('active', true)
+        ->where('visibility', 'public')
+        ->where('category', $service->category)
+        ->where('_id', '!=', $service->_id)
         ->limit(3)
         ->get();
     

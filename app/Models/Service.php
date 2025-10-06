@@ -4,28 +4,39 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Support\Collection;
-use Illuminate\Database\Eloquent\Model;
+use MongoDB\Laravel\Eloquent\Model;
 
 class Service extends Model
 {
     use HasFactory;
 
-    // Temporarily use MySQL instead of MongoDB
-    protected $connection = 'mysql';
+    // Use MongoDB connection
+    protected $connection = 'mongodb';
+    protected $collection = 'services';
     
-    // Use the correct primary key from migration
-    protected $primaryKey = 'ServiceID';
+    // MongoDB uses _id as primary key
+    protected $primaryKey = '_id';
 
     protected $fillable = [
-        'ServiceName',
-        'Description', 
-        'Price',
-        'Visibility',
-        'ServicePhoto',
+        'name',
+        'slug',
+        'category',
+        'description', 
+        'price',
+        'duration',
+        'active',
+        'visibility',
+        'image',
+        'features',
+        'tags',
     ];
 
     protected $casts = [
-        'Visibility' => 'boolean',
+        'price' => 'float',
+        'duration' => 'integer',
+        'active' => 'boolean',
+        'features' => 'array',
+        'tags' => 'array',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
     ];
@@ -41,12 +52,12 @@ class Service extends Model
     // Scopes
     public function scopeActive($query)
     {
-        return $query->where('Visibility', true);
+        return $query->where('active', true);
     }
 
     public function scopePublic($query)
     {
-        return $query->where('Visibility', true);
+        return $query->where('active', true)->where('visibility', 'public');
     }
 
     public function scopeByCategory($query, $category)
