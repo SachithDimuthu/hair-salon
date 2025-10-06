@@ -12,9 +12,14 @@ class MongoDBServicesSeeder extends Seeder
      */
     public function run(): void
     {
-        echo "🌱 Seeding MongoDB Services...\n";
+        echo "\n===========================================\n";
+        echo "🌱 STARTING MongoDB Services Seeder\n";
+        echo "===========================================\n";
         echo "Database: " . config('database.connections.mongodb.database') . "\n";
         echo "Host: " . config('database.connections.mongodb.host') . "\n";
+        echo "Port: " . config('database.connections.mongodb.port') . "\n";
+        echo "Connection: " . config('database.connections.mongodb.dsn') . "\n";
+        echo "-------------------------------------------\n";
         
         try {
         $services = [
@@ -70,11 +75,17 @@ class MongoDBServicesSeeder extends Seeder
         }
         
         $count = Service::count();
+        echo "-------------------------------------------\n";
         echo "✅ Successfully seeded {$count} services to MongoDB!\n";
+        echo "===========================================\n\n";
         
         } catch (\Exception $e) {
-            echo "❌ Error seeding MongoDB: " . $e->getMessage() . "\n";
-            echo "Stack trace: " . $e->getTraceAsString() . "\n";
+            echo "-------------------------------------------\n";
+            echo "❌ ERROR SEEDING MongoDB\n";
+            echo "Error: " . $e->getMessage() . "\n";
+            echo "File: " . $e->getFile() . ":" . $e->getLine() . "\n";
+            echo "Stack trace:\n" . $e->getTraceAsString() . "\n";
+            echo "===========================================\n\n";
             throw $e;
         }
     }
