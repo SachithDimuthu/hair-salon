@@ -3,7 +3,7 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
+use App\Models\Service;
 
 class MongoDBServicesSeeder extends Seeder
 {
@@ -13,7 +13,10 @@ class MongoDBServicesSeeder extends Seeder
     public function run(): void
     {
         echo "🌱 Seeding MongoDB Services...\n";
+        echo "Database: " . config('database.connections.mongodb.database') . "\n";
+        echo "Host: " . config('database.connections.mongodb.host') . "\n";
         
+        try {
         $services = [
             ['name' => 'Deluxe Haircut', 'slug' => 'deluxe-haircut', 'category' => 'Hair', 'description' => 'Premium haircut service with expert styling and consultation', 'price' => 1500, 'duration' => 60, 'active' => true, 'visibility' => 'public', 'image' => 'images/Services/Haircut.jpg', 'features' => ['Wash', 'Cut', 'Style'], 'tags' => ['haircut', 'styling']],
             
@@ -56,14 +59,23 @@ class MongoDBServicesSeeder extends Seeder
             ['name' => 'Festival Package', 'slug' => 'festival-package', 'category' => 'Special', 'description' => 'Special festival beauty package with hair and makeup', 'price' => 8000, 'duration' => 120, 'active' => true, 'visibility' => 'public', 'image' => 'images/Services/Festival.jpg', 'features' => ['Hair styling', 'Makeup', 'Accessories'], 'tags' => ['festival', 'package', 'celebration']],
         ];
 
-        // Clear existing services
-        DB::connection('mongodb')->collection('services')->truncate();
+        echo "Clearing existing services...\n";
+        Service::truncate();
         
         echo "Inserting " . count($services) . " services...\n";
         
-        // Insert all services
-        DB::connection('mongodb')->collection('services')->insert($services);
+        // Insert all services using the model
+        foreach ($services as $service) {
+            Service::create($service);
+        }
         
-        echo "✅ Successfully seeded " . count($services) . " services to MongoDB!\n";
+        $count = Service::count();
+        echo "✅ Successfully seeded {$count} services to MongoDB!\n";
+        
+        } catch (\Exception $e) {
+            echo "❌ Error seeding MongoDB: " . $e->getMessage() . "\n";
+            echo "Stack trace: " . $e->getTraceAsString() . "\n";
+            throw $e;
+        }
     }
 }
