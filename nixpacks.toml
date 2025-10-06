@@ -1,6 +1,5 @@
 # Nixpacks Configuration for Railway
 # This file tells Railway how to install PHP extensions
-# Updated to include MongoDB seeder
 
 [phases.setup]
 nixPkgs = ["php82", "php82Extensions.mongodb", "php82Extensions.pdo_mysql", "nodejs_18", "php82Packages.composer"]
@@ -11,5 +10,8 @@ cmds = ["npm ci", "composer install --optimize-autoloader --no-dev --ignore-plat
 [phases.build]  
 cmds = ["npm run build"]
 
+[phases.deploy]
+cmds = ["bash .railway/deploy.sh"]
+
 [start]
-cmd = "php artisan migrate --force && php artisan db:seed --class=MongoDBServicesSeeder --force && php artisan config:cache && php artisan route:cache && php artisan view:cache && php artisan serve --host=0.0.0.0 --port=$PORT"
+cmd = "php artisan serve --host=0.0.0.0 --port=$PORT"
