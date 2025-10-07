@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Service;
 use App\Models\Staff;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class HomeController extends Controller
 {
@@ -13,10 +14,16 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $featuredServices = Service::where('Visibility', true)
-            ->orderBy('Price', 'desc')
-            ->take(6)
-            ->get();
+        try {
+            $featuredServices = Service::where('Visibility', true)
+                ->orderBy('Price', 'desc')
+                ->take(6)
+                ->get();
+        } catch (\Exception $e) {
+            // If MongoDB fails or is empty, use empty collection
+            Log::error('Failed to fetch featured services: ' . $e->getMessage());
+            $featuredServices = collect([]);
+        }
 
         return view('welcome', compact('featuredServices'));
     }
@@ -26,9 +33,15 @@ class HomeController extends Controller
      */
     public function services()
     {
-        $services = Service::where('Visibility', true)
-            ->orderBy('ServiceName')
-            ->get();
+        try {
+            $services = Service::where('Visibility', true)
+                ->orderBy('ServiceName')
+                ->get();
+        } catch (\Exception $e) {
+            // If MongoDB fails or is empty, use empty collection
+            Log::error('Failed to fetch services: ' . $e->getMessage());
+            $services = collect([]);
+        }
 
         return view('public.services', compact('services'));
     }
