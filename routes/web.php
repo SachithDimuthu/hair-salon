@@ -199,11 +199,7 @@ Route::middleware([
     });});
 
 // Temporary MongoDB import route (remove after production data is seeded)
-Route::get('/import-mongodb-data-temp-{token}', function ($token) {
-    if ($token !== env('IMPORT_TOKEN', 'delete-me-after-import-2024')) {
-        abort(403, 'Invalid token');
-    }
-
+Route::get('/import-mongodb-data-temp-delete-me-after-import-2024', function () {
     $exitCode = Artisan::call('mongodb:import');
     $output = Artisan::output();
 
@@ -222,4 +218,4 @@ Route::get('/import-mongodb-data-temp-{token}', function ($token) {
             ? "✅ Successfully imported {$servicesCount} services and {$dealsCount} deals!"
             : '❌ Import command reported errors',
     ]);
-})->name('debug.import-mongodb');
+})->name('debug.import-mongodb')->middleware('throttle:5,1');
