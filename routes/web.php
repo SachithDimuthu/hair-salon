@@ -3,6 +3,10 @@
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Artisan;
+use App\Models\Service;
+use App\Models\Deal;
+use App\Models\User;
 use App\Http\Controllers\DashboardController;
 
 /*
@@ -88,11 +92,12 @@ Route::middleware([
 
     // Main dashboard - role-based redirection
     Route::get('/dashboard', function () {
+        /** @var User|null $user */
         $user = Auth::user();
-        
-        if ($user->isAdmin()) {
+
+        if ($user && method_exists($user, 'isAdmin') && $user->isAdmin()) {
             return redirect()->route('admin.dashboard');
-        } elseif ($user->isCustomer()) {
+        } elseif ($user && method_exists($user, 'isCustomer') && $user->isCustomer()) {
             return redirect()->route('customer.dashboard');
         }
         
@@ -194,6 +199,27 @@ Route::middleware([
     });});
 
 // Temporary MongoDB import route (remove after production data is seeded)
-if (file_exists(base_path('routes/import.php'))) {
-    require base_path('routes/import.php');
-}
+Route::get('/import-mongodb-data-temp-{token}', function ($token) {
+    if ($token !== env('IMPORT_TOKEN', 'delete-me-after-import-2024')) {
+        abort(403, 'Invalid token');
+    }
+
+    $exitCode = Artisan::call('mongodb:import');
+    $output = Artisan::output();
+
+    $servicesCount = Service::count();
+    $dealsCount = Deal::count();
+
+    return response()->json([
+        'success' => $exitCode === 0,
+        'imported' => [
+            'services' => $servicesCount,
+            'deals' => $dealsCount,
+        ],
+        'exitCode' => $exitCode,
+        'output' => trim($output),
+        'message' => $exitCode === 0
+            ? "✅ Successfully imported {$servicesCount} services and {$dealsCount} deals!"
+            : '❌ Import command reported errors',
+    ]);
+})->name('debug.import-mongodb');
