@@ -2,6 +2,9 @@
 
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\ServiceController;
+use Illuminate\Support\Facades\Artisan;
+use App\Models\Service;
+use App\Models\Deal;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -20,6 +23,19 @@ use Illuminate\Support\Facades\Route;
 | - Rate limiting and auth:sanctum middleware
 |
 */
+
+Route::middleware('throttle:5,1')->get('/debug/import-mongodb', function () {
+    $exitCode = Artisan::call('mongodb:import');
+    $output = Artisan::output();
+
+    return response()->json([
+        'success' => $exitCode === 0,
+        'services' => Service::count(),
+        'deals' => Deal::count(),
+        'exitCode' => $exitCode,
+        'output' => trim($output),
+    ]);
+});
 
 // Public API routes (with standard rate limiting)
 Route::middleware(['throttle:api'])->group(function () {
