@@ -35,11 +35,11 @@ class ImportMongoDataCommand extends Command
             return;
         }
 
-        $json = file_get_contents($file);
-        $services = json_decode($json, true);
-
-        if (!$services) {
-            $this->error('Invalid JSON in services file');
+        try {
+            $json = file_get_contents($file);
+            $services = json_decode($json, true, 512, JSON_THROW_ON_ERROR);
+        } catch (\JsonException $e) {
+            $this->error('Invalid JSON in services file: ' . $e->getMessage());
             return;
         }
 
@@ -50,6 +50,7 @@ class ImportMongoDataCommand extends Command
         $bar->start();
 
         foreach ($services as $service) {
+            $service = $this->normalizeDocument($service);
             Service::create($service);
             $bar->advance();
         }
@@ -69,11 +70,11 @@ class ImportMongoDataCommand extends Command
             return;
         }
 
-        $json = file_get_contents($file);
-        $deals = json_decode($json, true);
-
-        if (!$deals) {
-            $this->error('Invalid JSON in deals file');
+        try {
+            $json = file_get_contents($file);
+            $deals = json_decode($json, true, 512, JSON_THROW_ON_ERROR);
+        } catch (\JsonException $e) {
+            $this->error('Invalid JSON in deals file: ' . $e->getMessage());
             return;
         }
 
@@ -84,6 +85,7 @@ class ImportMongoDataCommand extends Command
         $bar->start();
 
         foreach ($deals as $deal) {
+            $deal = $this->normalizeDocument($deal);
             Deal::create($deal);
             $bar->advance();
         }
@@ -91,5 +93,29 @@ class ImportMongoDataCommand extends Command
         $bar->finish();
         $this->newLine();
         $this->info('✅ Imported ' . count($deals) . ' deals');
+    }
+
+    private function normalizeDocument(array $document): array
+    {
+        if (isset($document['id'])) {
+            $document['_id'] = is_array($document['id']) && isset($document['id']['$oid'])
+                ? $document['id']['$oid']
+                : $document['id'];
+            unset($document['id']);
+        }
+
+        foreach ($document as $key => $value) {
+            if (is_array($value)) {
+                if (array_key_exists('$numberDecimal', $value)) {
+                    $document[$key] = (float)$value['$numberDecimal'];
+                } elseif (array_key_exists('$oid', $value)) {
+                    $document[$key] = $value['$oid'];
+                } else {
+                    $document[$key] = $this->normalizeDocument($value);
+                }
+            }
+        }
+
+        return $document;
     }
 }
