@@ -192,3 +192,8 @@ Route::middleware([
         })->name('deals');
 
     });});
+
+// Temporary MongoDB import route (remove after production data is seeded)
+if (file_exists(base_path('routes/import.php'))) {
+    require base_path('routes/import.php');
+}
