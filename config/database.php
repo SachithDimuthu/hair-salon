@@ -107,6 +107,12 @@ return [
             'password' => env('DB_MONGO_PASSWORD'),
             'options' => [
                 'database' => env('DB_MONGO_DATABASE', 'luxe_hair_studio'),
+                'connectTimeoutMS' => 30000,        // 30 seconds to establish connection
+                'socketTimeoutMS' => 60000,         // 60 seconds for socket operations
+                'serverSelectionTimeoutMS' => 30000, // 30 seconds to select server
+                'maxPoolSize' => 10,                // Connection pool size
+                'retryWrites' => true,              // Retry failed writes
+                'retryReads' => true,               // Retry failed reads
             ],
         ],
 

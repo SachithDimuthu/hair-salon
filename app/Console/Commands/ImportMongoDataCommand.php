@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use App\Models\Service;
 use App\Models\Deal;
+use Illuminate\Support\Facades\DB;
 
 class ImportMongoDataCommand extends Command
 {
@@ -13,6 +14,32 @@ class ImportMongoDataCommand extends Command
 
     public function handle()
     {
+        $this->info('🔌 Testing MongoDB connection...');
+        
+        // Test connection with retry logic
+        $maxRetries = 3;
+        $connected = false;
+        
+        for ($i = 1; $i <= $maxRetries; $i++) {
+            try {
+                DB::connection('mongodb')->getMongoClient()->listDatabases();
+                $this->info("✅ MongoDB connected successfully");
+                $connected = true;
+                break;
+            } catch (\Exception $e) {
+                $this->warn("Connection attempt $i/$maxRetries failed: " . $e->getMessage());
+                if ($i < $maxRetries) {
+                    $this->info("Retrying in 2 seconds...");
+                    sleep(2);
+                }
+            }
+        }
+        
+        if (!$connected) {
+            $this->error('❌ Could not connect to MongoDB after ' . $maxRetries . ' attempts');
+            return 1;
+        }
+
         if ($this->option('services')) {
             $this->importServices();
         } elseif ($this->option('deals')) {
@@ -43,21 +70,27 @@ class ImportMongoDataCommand extends Command
             return;
         }
 
-        $this->info('Truncating existing services...');
-        Service::truncate();
+        try {
+            $this->info('Truncating existing services...');
+            Service::truncate();
 
-        $bar = $this->output->createProgressBar(count($services));
-        $bar->start();
+            $bar = $this->output->createProgressBar(count($services));
+            $bar->start();
 
-        foreach ($services as $service) {
-            $service = $this->normalizeDocument($service);
-            Service::create($service);
-            $bar->advance();
+            foreach ($services as $service) {
+                $service = $this->normalizeDocument($service);
+                Service::create($service);
+                $bar->advance();
+            }
+
+            $bar->finish();
+            $this->newLine();
+            $this->info('✅ Imported ' . count($services) . ' services');
+        } catch (\Exception $e) {
+            $this->newLine();
+            $this->error('❌ Error importing services: ' . $e->getMessage());
+            $this->error('Trace: ' . $e->getTraceAsString());
         }
-
-        $bar->finish();
-        $this->newLine();
-        $this->info('✅ Imported ' . count($services) . ' services');
     }
 
     private function importDeals()
@@ -78,21 +111,27 @@ class ImportMongoDataCommand extends Command
             return;
         }
 
-        $this->info('Truncating existing deals...');
-        Deal::truncate();
+        try {
+            $this->info('Truncating existing deals...');
+            Deal::truncate();
 
-        $bar = $this->output->createProgressBar(count($deals));
-        $bar->start();
+            $bar = $this->output->createProgressBar(count($deals));
+            $bar->start();
 
-        foreach ($deals as $deal) {
-            $deal = $this->normalizeDocument($deal);
-            Deal::create($deal);
-            $bar->advance();
+            foreach ($deals as $deal) {
+                $deal = $this->normalizeDocument($deal);
+                Deal::create($deal);
+                $bar->advance();
+            }
+
+            $bar->finish();
+            $this->newLine();
+            $this->info('✅ Imported ' . count($deals) . ' deals');
+        } catch (\Exception $e) {
+            $this->newLine();
+            $this->error('❌ Error importing deals: ' . $e->getMessage());
+            $this->error('Trace: ' . $e->getTraceAsString());
         }
-
-        $bar->finish();
-        $this->newLine();
-        $this->info('✅ Imported ' . count($deals) . ' deals');
     }
 
     private function normalizeDocument(array $document): array
