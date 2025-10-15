@@ -10,5 +10,5 @@ cmds = ["npm ci", "composer install --optimize-autoloader --no-dev --ignore-plat
 [phases.build]  
 cmds = ["npm run build"]
 
-[phases.deploy]
-cmds = ["php artisan migrate --force"]
+[start]
+cmd = "bash railway-start.sh"
