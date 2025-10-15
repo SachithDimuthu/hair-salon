@@ -1,1 +1,1 @@
-web: echo "====== STARTING DEPLOYMENT ======" && php artisan migrate --force && echo "====== RUNNING MONGODB SEEDER ======" && php artisan db:seed --class=MongoDBServicesSeeder --force && echo "====== CACHING CONFIG ======" && php artisan config:cache && php artisan route:cache && php artisan view:cache && echo "====== STARTING SERVER ======" && php artisan serve --host=0.0.0.0 --port=$PORT
+web: php artisan migrate --force && php artisan config:cache && php artisan serve --host=0.0.0.0 --port=$PORT

@@ -7,15 +7,9 @@ echo "================================"
 echo "📄 Running database migrations..."
 php artisan migrate --force
 
-# Seed MongoDB with services
-echo "🌱 Seeding MongoDB with services..."
-php artisan db:seed --class=MongoDBServicesSeeder --force
-
-# Cache configuration
+# Cache configuration only (no routes/views to avoid 404s)
 echo "⚡ Caching configuration..."
 php artisan config:cache
-php artisan route:cache  
-php artisan view:cache
 
 # Start server
 echo "✅ Starting web server..."
