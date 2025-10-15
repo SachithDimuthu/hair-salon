@@ -1,0 +1,149 @@
+# 🚀 RAILWAY DEPLOYMENT QUICK FIX CHECKLIST
+
+## Your Error
+```
+POST /api/register → 500 Server Error
+POST /api/login → 500 Server Error
+```
+
+---
+
+## 5-MINUTE FIX
+
+### Step 1: Check Railway Has Database
+1. Open Railway Dashboard: https://railway.app/dashboard
+2. Go to your `hair-salon-production` project
+3. Look for a **MySQL** or **PostgreSQL** service
+4. ❌ **If NO database exists:**
+   - Click **"+ New"**
+   - Select **"Database"** → **MySQL**
+   - Wait 30 seconds for provisioning
+   - ✅ Railway will auto-inject connection variables
+
+### Step 2: Set Environment Variables
+In Railway → Your Service → **Variables** tab:
+
+**Required:**
+```
+APP_KEY=base64:YOUR_KEY_HERE
+DB_CONNECTION=mysql
+APP_ENV=production
+APP_DEBUG=false
+APP_URL=https://hair-salon-production.up.railway.app
+```
+
+**Get APP_KEY:**
+Run locally:
+```bash
+php artisan key:generate --show
+```
+Copy the output (starts with `base64:...`)
+
+### Step 3: Run Migrations
+After database is added, open Railway **terminal** or run:
+
+```bash
+railway run php artisan migrate --force
+```
+
+OR add to `nixpacks.toml`:
+```toml
+[phases.setup]
+cmds = ["php artisan migrate --force"]
+```
+
+### Step 4: Redeploy
+Railway Dashboard → Deployments → **"Redeploy"** button
+
+---
+
+## VERIFY IT WORKS
+
+### Test 1: Health Check
+Open in browser:
+```
+https://hair-salon-production.up.railway.app/api
+```
+✅ Should return: `{"message":"API is working!"}`
+
+### Test 2: Debug Auth Status
+```
+https://hair-salon-production.up.railway.app/api/debug/auth-status
+```
+Check response:
+```json
+{
+  "checks": {
+    "app_key_set": true,        ← Must be true
+    "database_connection": "SUCCESS",  ← Must say SUCCESS
+    "users_table_exists": true,  ← Must be true
+    "users_count": 0             ← OK if 0 (no users yet)
+  }
+}
+```
+
+### Test 3: Register User
+Use Postman or curl:
+```bash
+curl -X POST https://hair-salon-production.up.railway.app/api/register \
+  -H "Content-Type: application/json" \
+  -d '{"name":"Test","email":"test@test.com","password":"password123","password_confirmation":"password123"}'
+```
+✅ Success: `{"user":{...},"token":"..."}`  
+❌ Still 500? → Check Railway logs
+
+---
+
+## COMMON ERRORS & FIXES
+
+### Error: `No application encryption key`
+**Fix:** Set `APP_KEY` in Railway env vars
+
+### Error: `Database not configured`
+**Fix:** Add MySQL database + set `DB_CONNECTION=mysql`
+
+### Error: `SQLSTATE[HY000] [2002]`
+**Fix:** Database not provisioned or wrong credentials
+
+### Error: `Table 'users' doesn't exist`
+**Fix:** Run migrations: `railway run php artisan migrate --force`
+
+---
+
+## RAILWAY LOGS
+
+Check logs:
+1. Railway Dashboard → Deployments → Latest deployment
+2. Click **"View Logs"**
+3. Look for errors like:
+   - `RuntimeException: No application encryption key`
+   - `SQLSTATE[HY000]`
+   - `Class 'MongoDB\...' not found` (if MongoDB issue)
+
+---
+
+## AFTER FIX
+
+Your Flutter app should work:
+```dart
+// In Flutter, this should now succeed:
+POST https://hair-salon-production.up.railway.app/api/register
+{
+  "name": "Sachith",
+  "email": "sachith@gmail.com",
+  "password": "123456789",
+  "password_confirmation": "123456789"
+}
+// ✅ Returns: {"user":{...},"token":"..."}
+```
+
+---
+
+**TLDR:**
+1. Add MySQL database in Railway
+2. Set `APP_KEY` and `DB_CONNECTION=mysql` in env vars
+3. Run `railway run php artisan migrate --force`
+4. Redeploy
+5. Test `/api/debug/auth-status`
+
+Done! 🎉

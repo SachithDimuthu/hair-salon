@@ -2,10 +2,14 @@
 
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\ServiceController;
+use App\Http\Controllers\Api\DealController;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Http\Request;
 use App\Models\Service;
 use App\Models\Deal;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 
 /*
 |--------------------------------------------------------------------------
@@ -23,6 +27,28 @@ use Illuminate\Support\Facades\Route;
 | - Rate limiting and auth:sanctum middleware
 |
 */
+
+// API Health Check - Test route to verify API is working
+Route::get('/', function () {
+    return response()->json([
+        'message' => 'API is working!',
+        'timestamp' => now(),
+        'version' => '1.0',
+        'endpoints' => [
+            'auth' => '/api/login, /api/register',
+            'services' => '/api/services',
+            'deals' => '/api/deals',
+        ],
+    ]);
+});
+
+// Test protected route - Verify authentication is working
+Route::middleware('auth:sanctum')->get('/test', function (Request $request) {
+    return response()->json([
+        'message' => 'Authenticated successfully!',
+        'user' => $request->user(),
+    ]);
+});
 
 Route::middleware('throttle:5,1')->get('/debug/import-mongodb', function () {
     $exitCode = Artisan::call('mongodb:import');
@@ -49,13 +75,60 @@ Route::middleware(['throttle:api'])->group(function () {
         ->name('api.services.public');
     
     // Public deal listings (no authentication required)
-    // Route::get('/deals', [DealController::class, 'index'])
-    //     ->name('api.deals.index');
+    Route::get('/deals', [DealController::class, 'index'])
+        ->name('api.deals.index');
+    
+    // Public active deals with caching
+    Route::get('/deals/public', [DealController::class, 'publicDeals'])
+        ->name('api.deals.public');
+    
+    // Check deal availability
+    Route::get('/deals/{id}/availability', [DealController::class, 'checkAvailability'])
+        ->name('api.deals.availability');
     
 });
 
+// Debug endpoint to test database and auth setup
+Route::get('/debug/auth-status', function () {
+    try {
+        $checks = [
+            'app_key_set' => config('app.key') !== null && config('app.key') !== '',
+            'database_connection' => 'unknown',
+            'users_table_exists' => false,
+            'users_count' => 0,
+            'sanctum_config' => config('sanctum.guard') !== null,
+        ];
+
+        // Test database connection
+        try {
+            DB::connection()->getPdo();
+            $checks['database_connection'] = 'SUCCESS';
+            
+            // Check if users table exists
+            if (Schema::hasTable('users')) {
+                $checks['users_table_exists'] = true;
+                $checks['users_count'] = DB::table('users')->count();
+            }
+        } catch (\Exception $e) {
+            $checks['database_connection'] = 'FAILED: ' . $e->getMessage();
+        }
+
+        return response()->json([
+            'status' => 'Auth Debug Info',
+            'checks' => $checks,
+            'env' => config('app.env'),
+            'url' => config('app.url'),
+        ]);
+    } catch (\Exception $e) {
+        return response()->json([
+            'error' => $e->getMessage(),
+            'trace' => $e->getTraceAsString(),
+        ], 500);
+    }
+})->name('api.debug.auth');
+
 // Authentication API routes (with stricter rate limiting)
-Route::middleware(['throttle:auth,5,1'])->group(function () {
+Route::middleware(['throttle:auth'])->group(function () {
     
     Route::post('/login', [AuthController::class, 'login'])
         ->name('api.auth.login');
@@ -96,19 +169,19 @@ Route::middleware(['auth:sanctum', 'throttle:api'])->group(function () {
     Route::get('/services/stats/aggregate', [ServiceController::class, 'aggregateStats'])
         ->name('api.services.aggregate-stats');
 
+    // Deals API (full CRUD for authenticated users)
+    Route::apiResource('deals', DealController::class)
+        ->except(['index']) // index is public
+        ->names([
+            'show' => 'api.deals.show',
+            'store' => 'api.deals.store',
+            'update' => 'api.deals.update',
+            'destroy' => 'api.deals.destroy',
+        ]);
+
     // TODO: Future auth enhancement - wrap mutating routes with sanctum middleware
     // These routes (store, update, destroy) should be wrapped with auth:sanctum middleware
     // when proper authentication system is fully implemented
-    
-    // Deals API (full CRUD for authenticated users)
-    // Route::apiResource('deals', DealController::class)
-    //     ->except(['index']) // index is public
-    //     ->names([
-    //         'show' => 'api.deals.show',
-    //         'store' => 'api.deals.store',
-    //         'update' => 'api.deals.update',
-    //         'destroy' => 'api.deals.destroy',
-    //     ]);
     
     // Customer management API (admin/staff only)
     // Route::middleware(['role:admin,staff'])->group(function () {

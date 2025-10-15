@@ -72,10 +72,10 @@ class User extends Authenticatable
         return $this->hasOne(Customer::class);
     }
 
-    public function staff()
-    {
-        return $this->hasOne(Staff::class);
-    }
+    //public function staff()
+    //{
+        //return $this->hasOne(Staff::class);
+    //}
 
     // Booking relationships
     public function customerBookings()
